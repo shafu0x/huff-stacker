@@ -28,11 +28,12 @@ fn parse_opcode(stack: &mut Stack, line: String) {
     }
 }
 
-fn parse_macro(contents: String) -> String {
+fn parse_macro(contents: String) -> (String, usize) {
     let mut macro_contents = String::new();
 
+    let mut start = 0;
     let mut in_macro = false;
-    for l in contents.lines() {
+    for (i, l) in contents.lines().enumerate() {
         // in macro
         if in_macro && !l.starts_with("}") {
             // add line to macro_contents with a new line
@@ -42,6 +43,7 @@ fn parse_macro(contents: String) -> String {
 
         // start of macro
         if !in_macro && l.starts_with("#define macro") {
+            start = i;
             in_macro = true;
         }
 
@@ -51,7 +53,31 @@ fn parse_macro(contents: String) -> String {
         }
     }
 
-    macro_contents
+    return (macro_contents, start)
+}
+
+fn replace_macro(start: usize, comments: String, contents: String) {
+    // put lines into a vector
+    let mut content_lines: Vec<String> = contents.lines().map(|l| l.to_string()).collect();
+    let comment_lines: Vec<String> = comments.lines().map(|l| l.to_string()).collect();
+
+
+    let mut ii = 0;
+    //replace
+    for index in start+1..comment_lines.len()+2 {
+        content_lines[index] = comment_lines[ii].clone();
+        ii += 1;
+    }
+
+    // content lines to string with new line
+    let mut final_text = String::new();
+    for line in content_lines {
+        final_text.push_str(line.as_str());
+        final_text.push_str("\n");
+    }
+
+    println!("{}", final_text);
+
 }
 
 impl Lexer {
@@ -66,7 +92,7 @@ impl Lexer {
             .expect("Error reading file");
 
         // TODO: refactor the clone
-        let macro_contents = parse_macro(contents.clone());
+        let (macro_contents, start) = parse_macro(contents.clone());
 
         let mut stack = Stack::new();
 
@@ -80,6 +106,8 @@ impl Lexer {
         }
 
         let printer = Printer::new(macro_contents, stack, longest_line);
-        printer.print();
+        let comments = printer.print();
+
+        replace_macro(start, comments, contents);
     }
 }

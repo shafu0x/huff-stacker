@@ -15,7 +15,7 @@ impl Printer {
         }
     }
 
-    pub fn print(&self) {
+    pub fn print(&self) -> String {
         let mut final_text = String::new();
         for (i, line) in self.macro_content.lines().enumerate() {
             let final_len = self.longest_line - line.len() + 1;
@@ -38,6 +38,7 @@ impl Printer {
 
             final_text.push_str("\n");
         }
-        println!("{}", final_text);
+        // println!("{}", final_text);
+        final_text
     }
 }
