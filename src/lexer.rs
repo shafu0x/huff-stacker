@@ -70,11 +70,16 @@ impl Lexer {
 
         let mut stack = Stack::new();
 
+        let mut longest_line = 0;
+
         for l in macro_contents.lines() {
+            if l.len() > longest_line {
+                longest_line = l.len();
+            }
             parse_opcode(&mut stack, l.to_string());
         }
 
-        let printer = Printer::new(macro_contents, stack);
+        let printer = Printer::new(macro_contents, stack, longest_line);
         printer.print();
     }
 }
