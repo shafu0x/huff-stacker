@@ -2,12 +2,13 @@ use std::fs::File;
 use std::io::Read;
 
 use crate::stack::Stack;
+use crate::stack2::Stack2;
 
 pub struct Lexer {
     path: String,
 }
 
-fn parse_opcode(stack: &mut Stack, line: String) {
+fn parse_opcode(stack: &mut Stack2, line: String) {
     let l = line.trim();
 
     if l.starts_with("0x") {
@@ -15,8 +16,7 @@ fn parse_opcode(stack: &mut Stack, line: String) {
     }
 
     if l == "calldataload" {
-        stack.pop();
-        stack.push("calldata".to_string());
+        stack.pop_and_push("calldata".to_string());
     }
 
     if l.starts_with("[") {
@@ -29,8 +29,8 @@ fn parse_opcode(stack: &mut Stack, line: String) {
     }
 }
 
-fn pprint(stack: &Stack, macro_contents: &str) {
-    println!("{}", stack);
+fn pprint(stack: &Stack2, macro_contents: &str) {
+    // println!("{}", stack);
 }
 
 fn parse_macro(contents: String) -> String {
@@ -73,11 +73,11 @@ impl Lexer {
         // TODO: refactor the clone
         let macro_contents = parse_macro(contents.clone());
 
-        let mut stack = Stack::new();
+        let mut stack = Stack2::new();
 
         for l in macro_contents.lines() {
             parse_opcode(&mut stack, l.to_string());
-            println!("{}", stack);
+            println!("{:?}", stack);
         }
 
         // pprint(&stack, &macro_contents);
