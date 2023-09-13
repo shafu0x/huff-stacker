@@ -5,19 +5,39 @@ pub struct Lexer {
     path: String,
 }
 
-fn lex_macro(contents: String) {
+fn parse_opcode(line: String) {
+    let l = line.trim_start().trim_end();
+
+    if l.starts_with("0x") {
+        println!("{}", l);
+    }
+    
+    if l == "calldataload" {
+        println!("{}", l);
+    }
+
+    if l.starts_with("[") {
+        println!("{}", l);
+    }
+
+    if l == "sstore" {
+        println!("{}", l);
+    }
+
+}
+
+fn parse_macro(contents: String) -> String{
     let mut macro_contents = String::new();
 
     let mut in_macro = false;
     for l in contents.lines() {
-
         // in macro
         if in_macro && !l.starts_with("}") {
             // add line to macro_contents with a new line
             macro_contents.push_str(l);
             macro_contents.push_str("\n");
         }
-        
+
         // start of macro
         if !in_macro && l.starts_with("#define macro") {
             in_macro = true;
@@ -29,9 +49,8 @@ fn lex_macro(contents: String) {
         }
     }
 
-    println!("{}", macro_contents);
+    macro_contents
 }
-
 
 impl Lexer {
     pub fn new(path: String) -> Lexer {
@@ -44,6 +63,13 @@ impl Lexer {
         file.read_to_string(&mut contents)
             .expect("Error reading file");
 
-        lex_macro(contents);
+        // TODO: refactor the clone
+        let macro_contents = parse_macro(contents.clone());
+        // println!("{}", macro_contents);
+
+        for l in macro_contents.lines() {
+            parse_opcode(l.to_string());
+        }
+
     }
 }
