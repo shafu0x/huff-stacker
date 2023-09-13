@@ -1,5 +1,6 @@
 use std::fs::File;
 use std::io::Read;
+use std::io::Write;
 
 use crate::printer::Printer;
 use crate::stack::Stack;
@@ -56,7 +57,7 @@ fn parse_macro(contents: String) -> (String, usize) {
     return (macro_contents, start)
 }
 
-fn replace_macro(start: usize, comments: String, contents: String) {
+fn replace_macro(start: usize, comments: String, contents: String) -> String {
     // put lines into a vector
     let mut content_lines: Vec<String> = contents.lines().map(|l| l.to_string()).collect();
     let comment_lines: Vec<String> = comments.lines().map(|l| l.to_string()).collect();
@@ -76,7 +77,9 @@ fn replace_macro(start: usize, comments: String, contents: String) {
         final_text.push_str("\n");
     }
 
-    println!("{}", final_text);
+    // println!("{}", final_text);
+
+    return final_text;
 
 }
 
@@ -108,6 +111,11 @@ impl Lexer {
         let printer = Printer::new(macro_contents, stack, longest_line);
         let comments = printer.print();
 
-        replace_macro(start, comments, contents);
+        let with_comments = replace_macro(start, comments, contents);
+
+        // write comments to a file
+        let mut file = File::create("output.huff").expect("Unable to create file");
+        file.write_all(with_comments.as_bytes())
+            .expect("Unable to write data");
     }
 }
