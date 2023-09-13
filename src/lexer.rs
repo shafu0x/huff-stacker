@@ -23,8 +23,7 @@ fn parse_opcode(stack: &mut Stack, line: String) {
     }
 
     if l == "sstore" {
-        stack.pop();
-        stack.pop();
+        stack.pop2();
     }
 }
 

@@ -31,6 +31,18 @@ impl Stack {
         popped
     }
 
+    pub fn pop2(&mut self) -> Option<String> {
+        if self.values.len() == 0 {
+            return None;
+        }
+
+        let mut last_values = self.values.last().unwrap().clone();
+        let popped = last_values.pop();
+        let popped2 = last_values.pop();
+        self.values.push(last_values);
+        popped2
+    }
+
     pub fn pop_and_push(&mut self, value: String) -> Option<String> {
         if self.values.len() == 0 {
             return None;
