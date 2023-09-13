@@ -2,6 +2,7 @@ use std::fs::File;
 use std::io::Read;
 
 use crate::stack::Stack;
+use crate::printer::Printer;
 
 pub struct Lexer {
     path: String,
@@ -19,16 +20,12 @@ fn parse_opcode(stack: &mut Stack, line: String) {
     }
 
     if l.starts_with("[") {
-        stack.push("[VALUE_LOCATION]".to_string());
+        stack.push("ptr".to_string());
     }
 
     if l == "sstore" {
         stack.pop2();
     }
-}
-
-fn pprint(stack: &Stack, macro_contents: &str) {
-    // println!("{}", stack);
 }
 
 fn parse_macro(contents: String) -> String {
@@ -75,9 +72,9 @@ impl Lexer {
 
         for l in macro_contents.lines() {
             parse_opcode(&mut stack, l.to_string());
-            println!("{:?}", stack);
         }
 
-        // pprint(&stack, &macro_contents);
+        let printer = Printer::new(macro_contents, stack);
+        printer.print();
     }
 }

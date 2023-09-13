@@ -1,4 +1,5 @@
 mod lexer;
+mod printer;
 mod stack;
 
 use lexer::Lexer;

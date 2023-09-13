@@ -1,8 +1,6 @@
-use std::fmt;
-
 #[derive(Debug)]
 pub struct Stack {
-    values: Vec<Vec<String>>,
+    pub values: Vec<Vec<String>>,
 }
 
 impl Stack {
@@ -20,16 +18,16 @@ impl Stack {
         }
     }
 
-    pub fn pop(&mut self) -> Option<String> {
-        if self.values.len() == 0 {
-            return None;
-        }
+    // pub fn pop(&mut self) -> Option<String> {
+    //     if self.values.len() == 0 {
+    //         return None;
+    //     }
 
-        let mut last_values = self.values.last().unwrap().clone();
-        let popped = last_values.pop();
-        self.values.push(last_values);
-        popped
-    }
+    //     let mut last_values = self.values.last().unwrap().clone();
+    //     let popped = last_values.pop();
+    //     self.values.push(last_values);
+    //     popped
+    // }
 
     pub fn pop2(&mut self) -> Option<String> {
         if self.values.len() == 0 {
@@ -37,7 +35,7 @@ impl Stack {
         }
 
         let mut last_values = self.values.last().unwrap().clone();
-        let popped = last_values.pop();
+        last_values.pop();
         let popped2 = last_values.pop();
         self.values.push(last_values);
         popped2
@@ -63,4 +61,3 @@ impl Stack {
     //     self.values.len()
     // }
 }
-
