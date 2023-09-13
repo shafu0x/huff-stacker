@@ -64,7 +64,7 @@ fn replace_macro(start: usize, comments: String, contents: String) {
 
     let mut ii = 0;
     //replace
-    for index in start+1..comment_lines.len()+2 {
+    for index in start+1..=comment_lines.len()+1 {
         content_lines[index] = comment_lines[ii].clone();
         ii += 1;
     }
