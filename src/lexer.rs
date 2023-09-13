@@ -6,10 +6,10 @@ pub struct Lexer {
 }
 
 fn parse_opcode(stack: &mut Vec<&str>, line: String) {
-    let l = line.trim_start().trim_end();
+    let l = line.trim();
 
     if l.starts_with("0x") {
-        stack.push("0x");
+        stack.push(l);
     }
 
     if l == "calldataload" {
