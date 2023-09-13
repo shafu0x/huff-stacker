@@ -29,6 +29,10 @@ fn parse_opcode(stack: &mut Stack, line: String) {
     }
 }
 
+fn pprint(stack: &Stack, macro_contents: &str) {
+    println!("{}", stack);
+}
+
 fn parse_macro(contents: String) -> String {
     let mut macro_contents = String::new();
 
@@ -68,7 +72,6 @@ impl Lexer {
 
         // TODO: refactor the clone
         let macro_contents = parse_macro(contents.clone());
-        // println!("{}", macro_contents);
 
         let mut stack = Stack::new();
 
@@ -76,5 +79,7 @@ impl Lexer {
             parse_opcode(&mut stack, l.to_string());
             println!("{}", stack);
         }
+
+        // pprint(&stack, &macro_contents);
     }
 }
