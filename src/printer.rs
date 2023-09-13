@@ -21,7 +21,15 @@ impl Printer {
             final_text.push_str(line);
             final_text.push_str(" // ");
             final_text.push_str("[");
-            final_text.push_str(self.stack.values[i].join(", ").as_str());
+            final_text.push_str(
+                self.stack.values[i]
+                    .iter()
+                    .rev()
+                    .map(|v| v.to_string())
+                    .collect::<Vec<_>>()
+                    .join(", ")
+                    .as_str(),
+            );
             final_text.push_str("]");
 
             final_text.push_str("\n");

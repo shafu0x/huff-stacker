@@ -1,8 +1,8 @@
 use std::fs::File;
 use std::io::Read;
 
-use crate::stack::Stack;
 use crate::printer::Printer;
+use crate::stack::Stack;
 
 pub struct Lexer {
     path: String,
