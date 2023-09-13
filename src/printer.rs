@@ -16,8 +16,6 @@ impl Printer {
     pub fn print(&self) {
         let mut final_text = String::new();
         for (i, line) in self.macro_content.lines().enumerate() {
-            // println!("{}: {}", i, line);
-
             final_text.push_str(line);
             final_text.push_str(" // ");
             final_text.push_str("[");
