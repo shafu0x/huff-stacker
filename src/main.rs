@@ -1,4 +1,5 @@
 mod lexer;
+mod stack;
 
 use lexer::Lexer;
 
