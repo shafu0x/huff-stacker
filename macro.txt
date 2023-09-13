@@ -1,7 +1,12 @@
 /* Methods */
 #define macro SET_VALUE() = takes (0) returns (0) {
-    0x04 
-    calldataload   
-    [VALUE_LOCATION]   
-    sstore            
+    0x04
+    calldataload
+    [VALUE_LOCATION]
+    sstore
+    0x69
+    0x00
+    mstore
+    0x00
+    mload
 }

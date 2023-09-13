@@ -27,6 +27,14 @@ fn parse_opcode(stack: &mut Stack, line: String) {
     if l == "sstore" {
         stack.pop2();
     }
+    if l == "mstore" {
+        stack.pop2();
+    }
+    if l == "mload" {
+        let popped = stack.peek().unwrap().clone();
+        let result = format!("mload: {}", popped);
+        stack.pop_and_push(result.to_string());
+    }
 }
 
 fn parse_macro(contents: String) -> (String, usize) {
