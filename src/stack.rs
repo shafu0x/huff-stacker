@@ -2,14 +2,7 @@ use std::fmt;
 
 #[derive(Debug)]
 pub struct Stack {
-    values: Vec<String>,
-}
-
-impl fmt::Display for Stack {
-fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let values_str: Vec<String> = self.values.iter().map(|v| v.to_string()).collect();
-        write!(f, "[{}]", values_str.join(" "))
-    }
+    values: Vec<Vec<String>>,
 }
 
 impl Stack {
@@ -18,18 +11,44 @@ impl Stack {
     }
 
     pub fn push(&mut self, value: String) {
-        self.values.push(value);
+        if self.values.len() == 0 {
+            self.values.push(vec![value]);
+        } else {
+            let mut last_values = self.values.last().unwrap().clone();
+            last_values.push(value);
+            self.values.push(last_values);
+        }
     }
 
     pub fn pop(&mut self) -> Option<String> {
-        self.values.pop()
+        if self.values.len() == 0 {
+            return None;
+        }
+
+        let mut last_values = self.values.last().unwrap().clone();
+        let popped = last_values.pop();
+        self.values.push(last_values);
+        popped
     }
 
-    pub fn peek(&self) -> Option<&String> {
-        self.values.last()
+    pub fn pop_and_push(&mut self, value: String) -> Option<String> {
+        if self.values.len() == 0 {
+            return None;
+        }
+
+        let mut last_values = self.values.last().unwrap().clone();
+        let popped = last_values.pop();
+        last_values.push(value);
+        self.values.push(last_values);
+        popped
     }
 
-    pub fn len(&self) -> usize {
-        self.values.len()
-    }
+    // pub fn peek(&self) -> Option<&String> {
+    //     self.values.last()
+    // }
+
+    // pub fn len(&self) -> usize {
+    //     self.values.len()
+    // }
 }
+
