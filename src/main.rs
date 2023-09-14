@@ -1,4 +1,5 @@
 mod lexer;
+mod opcodes;
 mod printer;
 mod stack;
 

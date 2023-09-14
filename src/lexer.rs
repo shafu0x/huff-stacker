@@ -4,26 +4,27 @@ use std::io::Write;
 
 use crate::printer::Printer;
 use crate::stack::Stack;
+use crate::opcodes::{*};
 
 pub struct Lexer {
     path: String,
 }
 
 fn parse_opcode(stack: &mut Stack, line: &str) {
-    match line {
-        "sstore" => stack.pop2(),
-        "mstore" => stack.pop2(),
-        "mload" => {
+    match Opcode::from_string(line) {
+        SSTORE => stack.pop2(),
+        MSTORE => stack.pop2(),
+        MLOAD => {
             let popped = stack.peek().unwrap().clone();
             let result = format!("mload: {}", popped);
             stack.pop_and_push(result.to_string());
         }
-        "calldataload" => {
+        CALLDATALOAD => {
             let popped = stack.peek().unwrap().clone();
             let result = format!("calldataload: {}", popped);
             stack.pop_and_push(result.to_string())
         }
-        &_ => todo!(),
+        Opcode { name: &_, .. } => todo!()
     };
 }
 
