@@ -48,23 +48,24 @@ impl<'a> Printer<'a> {
     }
 
     pub fn merge(&self, function: &Function, contents: String, comments: String) {
-       let mut content_lines: Vec<String> = contents.lines().map(|l| l.to_string()).collect();
-       let comment_lines: Vec<String> = comments.lines().map(|l| l.to_string()).collect();
+        let mut content_lines: Vec<String> = contents.lines().map(|l| l.to_string()).collect();
+        let comment_lines: Vec<String> = comments.lines().map(|l| l.to_string()).collect();
 
-       let mut ii = 0;
-       //replace
-       for index in function.start + 1..=comment_lines.len() + 1 {
-           content_lines[index] = comment_lines[ii].clone();
-           ii += 1;
-       }
+        let mut ii = 0;
+        println!("content_lines: {}", function.start);
+        //replace
+        for index in function.start + 1..=comment_lines.len() + 1 {
+            content_lines[index] = comment_lines[ii].clone();
+            ii += 1;
+        }
 
-       // content lines to string with new line
-       let mut final_text = String::new();
-       for line in content_lines {
-           final_text.push_str(line.as_str());
-           final_text.push_str("\n");
-       }
+        // content lines to string with new line
+        let mut final_text = String::new();
+        for line in content_lines {
+            final_text.push_str(line.as_str());
+            final_text.push_str("\n");
+        }
 
-       // println!("{}", final_text);
+        // println!("{}", final_text);
     }
 }
