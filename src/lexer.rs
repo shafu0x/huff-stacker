@@ -26,16 +26,12 @@ fn parse_opcode(stack: &mut Stack, line: &str) {
 fn parse_line(stack: &mut Stack, line: String) {
     let trimmed_line = line.trim();
 
-    if trimmed_line.starts_with("0x") {
-        stack.push(trimmed_line.to_string());
-        return;
+    match trimmed_line {
+        line if line.starts_with("0x") => stack.push(line.to_string()),
+        line if line.starts_with("[") => stack.push(line.to_string().to_lowercase()),
+        line if line.starts_with("<") => stack.push(line.to_string()),
+        _ => parse_opcode(stack, trimmed_line), // Handle other cases or ignore them
     }
-    if trimmed_line.starts_with("[") {
-        stack.push("ptr".to_string());
-        return;
-    }
-
-    parse_opcode(stack, trimmed_line);
 }
 
 /// Parses a given input string to extract the contents of a macro definition 
