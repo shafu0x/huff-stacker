@@ -2,10 +2,10 @@ use std::fs::File;
 use std::io::Read;
 use std::io::Write;
 
+use crate::function::Function;
 use crate::opcodes::*;
 use crate::printer::Printer;
 use crate::stack::Stack;
-use crate::function::Function;
 
 pub struct Lexer {
     path: String,
@@ -96,7 +96,7 @@ fn replace_macro(start: usize, comments: String, contents: String) -> String {
 
 impl Lexer {
     pub fn new(path: String) -> Lexer {
-        Lexer { 
+        Lexer {
             path: path,
             functions: Vec::new(),
         }
@@ -120,7 +120,8 @@ impl Lexer {
             parse_line(&mut stack, line.to_string());
         }
 
-        self.functions.push(Function::new(start, macro_lines, stack));
+        self.functions
+            .push(Function::new(start, macro_lines, stack));
     }
 
     pub fn read_file(&self) {

@@ -1,8 +1,8 @@
+mod function;
 mod lexer;
 mod opcodes;
 mod printer;
 mod stack;
-mod function;
 
 use lexer::Lexer;
 use std::env;
