@@ -10,21 +10,6 @@ pub struct Lexer {
     path: String,
 }
 
-fn parse_opcode(stack: &mut Stack, line: &str) {
-    stack.update(Opcode::from_string(line));
-}
-
-fn parse_line(stack: &mut Stack, line: String) {
-    let trimmed_line = line.trim();
-
-    match trimmed_line {
-        line if line.starts_with("0x") => stack.push(line.to_string()),
-        line if line.starts_with("[") => stack.push(line.to_string().to_lowercase()),
-        line if line.starts_with("<") => stack.push(line.to_string()),
-        _ => parse_opcode(stack, trimmed_line), // Handle other cases or ignore them
-    }
-}
-
 /// Parses a given input string to extract the contents of a macro definition
 /// and determine the line number where the macro definition starts.
 ///
@@ -37,7 +22,6 @@ fn parse_line(stack: &mut Stack, line: String) {
 /// A tuple containing:
 /// - A string representing the contents of the macro.
 /// - The line number where the macro definition starts.
-///
 fn parse_macro(contents: String) -> (String, usize) {
     let mut macro_contents = String::new();
     let mut start = 0; // line number where macro starts
@@ -64,6 +48,24 @@ fn parse_macro(contents: String) -> (String, usize) {
     }
 
     return (macro_contents, start);
+}
+
+/// This function takes a mutable reference to a `Stack` and a `line` as input. It trims the
+/// `line`, checks its content, and pushes the result onto the `Stack` or delegates to `parse_opcode`
+/// for further processing if none of the specific cases match.
+fn parse_line(stack: &mut Stack, line: String) {
+    let trimmed_line = line.trim();
+
+    match trimmed_line {
+        line if line.starts_with("0x") => stack.push(line.to_string()),
+        line if line.starts_with("[") => stack.push(line.to_string().to_lowercase()),
+        line if line.starts_with("<") => stack.push(line.to_string()),
+        _ => parse_opcode(stack, trimmed_line), // Handle other cases or ignore them
+    }
+}
+
+fn parse_opcode(stack: &mut Stack, line: &str) {
+    stack.update(Opcode::from_string(line));
 }
 
 fn replace_macro(start: usize, comments: String, contents: String) -> String {

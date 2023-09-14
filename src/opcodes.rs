@@ -6,14 +6,6 @@ pub struct Opcode {
 }
 
 impl Opcode {
-    pub fn new(name: &'static str, pops: usize, pushes: usize) -> Opcode {
-        Opcode {
-            name: name,
-            pops: pops,
-            pushes: pushes,
-        }
-    }
-
     pub fn from_string(name: &str) -> Opcode {
         match name {
             "stop" => STOP,
