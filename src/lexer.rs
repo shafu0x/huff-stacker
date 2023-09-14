@@ -127,7 +127,7 @@ impl Lexer {
     pub fn write(&self) {
         for function in self.functions.iter() {
             let printer = Printer::new(function);
-            let comments = printer.print();
+            printer.write();
 
             // let with_comments = replace_macro(function.start, comments, function.body.clone());
 
