@@ -18,16 +18,16 @@ impl Stack {
         }
     }
 
-    // pub fn pop(&mut self) -> Option<String> {
-    //     if self.values.len() == 0 {
-    //         return None;
-    //     }
+    pub fn pop(&mut self) -> Option<String> {
+        if self.values.len() == 0 {
+            return None;
+        }
 
-    //     let mut last_values = self.values.last().unwrap().clone();
-    //     let popped = last_values.pop();
-    //     self.values.push(last_values);
-    //     popped
-    // }
+        let mut last_values = self.values.last().unwrap().clone();
+        let popped = last_values.pop();
+        self.values.push(last_values);
+        popped
+    }
 
     pub fn pop2(&mut self) -> Option<String> {
         if self.values.len() == 0 {
@@ -53,9 +53,9 @@ impl Stack {
         popped
     }
 
-    // pub fn peek(&self) -> Option<&String> {
-    //     self.values.last()
-    // }
+    pub fn peek(&self) -> Option<&String> {
+        self.values[self.values.len() - 1].last()
+    }
 
     // pub fn len(&self) -> usize {
     //     self.values.len()
