@@ -10,3 +10,8 @@
     0x00
     mload
 }
+
+/* Methods */
+#define macro SET_VALUE() = takes (0) returns (0) {
+    0x04
+}

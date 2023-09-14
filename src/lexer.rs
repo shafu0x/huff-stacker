@@ -9,6 +9,7 @@ use crate::stack::Stack;
 pub struct Lexer {
     path: String,
     functions: Vec<Function>,
+    contents: String,
 }
 
 /// Parses a given input string to extract the contents of a macro definition
@@ -23,7 +24,7 @@ pub struct Lexer {
 /// A tuple containing:
 /// - A string representing the contents of the macro.
 /// - The line number where the macro definition starts.
-fn get_macro(contents: String) -> (String, usize) {
+fn get_function(contents: String) -> (String, usize) {
     let mut macro_lines = String::new();
     let mut start = 0; // line number where macro starts
     let mut in_macro = false;
@@ -74,6 +75,7 @@ impl Lexer {
         Lexer {
             path: path,
             functions: Vec::new(),
+            contents: String::new(),
         }
     }
 
@@ -83,7 +85,9 @@ impl Lexer {
         file.read_to_string(&mut contents)
             .expect("Error reading file");
 
-        let (function_body, start) = get_macro(contents.clone());
+        let (function_body, start) = get_function(contents.clone());
+
+        self.contents = contents;
 
         let mut stack = Stack::new();
         let mut longest_line = 0;
@@ -100,9 +104,6 @@ impl Lexer {
     }
 
     pub fn write(&self) {
-        for function in self.functions.iter() {
-            let printer = Printer::new(function);
-            printer.write();
-        }
+        Printer::new(&self.functions).write(self.contents.clone());
     }
 }

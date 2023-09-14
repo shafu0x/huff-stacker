@@ -5,42 +5,18 @@ use crate::function::Function;
 use crate::stack::Stack;
 
 pub struct Printer<'a> {
-    function: &'a Function,
+    functions: &'a Vec<Function>,
 }
 
-//fn replace_macro(start: usize, comments: String, contents: String) -> String {
-//    // put lines into a vector
-//    let mut content_lines: Vec<String> = contents.lines().map(|l| l.to_string()).collect();
-//    let comment_lines: Vec<String> = comments.lines().map(|l| l.to_string()).collect();
-
-//    let mut ii = 0;
-//    //replace
-//    for index in start + 1..=comment_lines.len() + 1 {
-//        content_lines[index] = comment_lines[ii].clone();
-//        ii += 1;
-//    }
-
-//    // content lines to string with new line
-//    let mut final_text = String::new();
-//    for line in content_lines {
-//        final_text.push_str(line.as_str());
-//        final_text.push_str("\n");
-//    }
-
-//    println!("{}", final_text);
-
-//    return final_text;
-//}
-
 impl<'a> Printer<'a> {
-    pub fn new(function: &'a Function) -> Printer<'a> {
-        Printer { function }
+    pub fn new(functions: &'a Vec<Function>) -> Printer<'a> {
+        Printer { functions }
     }
 
-    pub fn create_comments(&self) -> String {
+    pub fn create_comments(&self, function: &Function) -> String {
         let mut final_text = String::new();
-        for (i, line) in self.function.body.lines().enumerate() {
-            let final_len = self.function.longest_line - line.len() + 1;
+        for (i, line) in function.body.lines().enumerate() {
+            let final_len = function.longest_line - line.len() + 1;
             final_text.push_str(line);
             for _ in 0..final_len {
                 final_text.push_str(" ");
@@ -48,7 +24,7 @@ impl<'a> Printer<'a> {
             final_text.push_str(" // ");
             final_text.push_str("[");
             final_text.push_str(
-                self.function.stack.values[i]
+                function.stack.values[i]
                     .iter()
                     .rev()
                     .map(|v| v.to_string())
@@ -63,15 +39,32 @@ impl<'a> Printer<'a> {
         final_text
     }
 
-    pub fn write(&self) {
-        let comments = self.create_comments();
-        println!("{}", comments);
-        // let with_comments =
-        //     replace_macro(self.function.start, comments, self.function.body.clone());
+    pub fn write(&self, contents: String) {
+        for function in self.functions {
+            let comments = self.create_comments(function);
+            self.merge(function, contents.clone(), comments) // refactor clone
+        }
+    }
 
-        // // write comments to a file
-        // let mut file = File::create("output.huff").expect("Unable to create file");
-        // file.write_all(with_comments.as_bytes())
-        //     .expect("Unable to write data");
+    pub fn merge(&self, function: &Function, contents: String, comments: String) {
+       let mut content_lines: Vec<String> = contents.lines().map(|l| l.to_string()).collect();
+       let comment_lines: Vec<String> = comments.lines().map(|l| l.to_string()).collect();
+
+       let mut ii = 0;
+       //replace
+       for index in function.start + 1..=comment_lines.len() + 1 {
+           content_lines[index] = comment_lines[ii].clone();
+           ii += 1;
+       }
+
+       // content lines to string with new line
+       let mut final_text = String::new();
+       for line in content_lines {
+           final_text.push_str(line.as_str());
+           final_text.push_str("\n");
+       }
+
+       println!("{}", final_text);
+
     }
 }
