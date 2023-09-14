@@ -5,9 +5,11 @@ use std::io::Write;
 use crate::opcodes::*;
 use crate::printer::Printer;
 use crate::stack::Stack;
+use crate::function::Function;
 
 pub struct Lexer {
     path: String,
+    functions: Vec<Function>,
 }
 
 /// Parses a given input string to extract the contents of a macro definition
@@ -22,17 +24,17 @@ pub struct Lexer {
 /// A tuple containing:
 /// - A string representing the contents of the macro.
 /// - The line number where the macro definition starts.
-fn parse_macro(contents: String) -> (String, usize) {
-    let mut macro_contents = String::new();
+fn get_macro(contents: String) -> (String, usize) {
+    let mut macro_lines = String::new();
     let mut start = 0; // line number where macro starts
     let mut in_macro = false;
 
     for (line_number, line) in contents.lines().enumerate() {
         // in macro
         if in_macro && !line.starts_with("}") {
-            // add line to macro_contents with a new line
-            macro_contents.push_str(line);
-            macro_contents.push_str("\n");
+            // add line to macro_lines with a new line
+            macro_lines.push_str(line);
+            macro_lines.push_str("\n");
         }
 
         // start of macro
@@ -47,7 +49,7 @@ fn parse_macro(contents: String) -> (String, usize) {
         }
     }
 
-    return (macro_contents, start);
+    return (macro_lines, start);
 }
 
 /// This function takes a mutable reference to a `Stack` and a `line` as input. It trims the
@@ -94,7 +96,29 @@ fn replace_macro(start: usize, comments: String, contents: String) -> String {
 
 impl Lexer {
     pub fn new(path: String) -> Lexer {
-        Lexer { path: path }
+        Lexer { 
+            path: path,
+            functions: Vec::new(),
+        }
+    }
+
+    pub fn parse(&self) {
+        let mut file = File::open(self.path.as_str()).expect("File not found");
+        let mut contents = String::new();
+        file.read_to_string(&mut contents)
+            .expect("Error reading file");
+
+        let (macro_lines, start) = get_macro(contents.clone());
+
+        let mut stack = Stack::new();
+        let mut longest_line = 0;
+
+        for line in macro_lines.lines() {
+            if line.len() > longest_line {
+                longest_line = line.len();
+            }
+            parse_line(&mut stack, line.to_string());
+        }
     }
 
     pub fn read_file(&self) {
@@ -104,20 +128,20 @@ impl Lexer {
             .expect("Error reading file");
 
         // TODO: refactor the clone
-        let (macro_contents, start) = parse_macro(contents.clone());
+        let (macro_lines, start) = get_macro(contents.clone());
 
         let mut stack = Stack::new();
 
         let mut longest_line = 0;
 
-        for l in macro_contents.lines() {
+        for l in macro_lines.lines() {
             if l.len() > longest_line {
                 longest_line = l.len();
             }
             parse_line(&mut stack, l.to_string());
         }
 
-        let printer = Printer::new(macro_contents, stack, longest_line);
+        let printer = Printer::new(macro_lines, stack, longest_line);
         let comments = printer.print();
 
         let with_comments = replace_macro(start, comments, contents);
