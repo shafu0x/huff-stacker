@@ -2,8 +2,8 @@ mod lexer;
 mod printer;
 mod stack;
 
-use std::env;
 use lexer::Lexer;
+use std::env;
 
 fn main() {
     let args: Vec<String> = env::args().collect();

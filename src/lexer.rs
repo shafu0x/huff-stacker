@@ -9,32 +9,33 @@ pub struct Lexer {
     path: String,
 }
 
-fn parse_opcode(stack: &mut Stack, line: String) {
+fn parse_opcode(stack: &mut Stack, line: &str) {
+    match line {
+        "calldataload" => stack.pop_and_push("calldata".to_string()),
+        "sstore" => stack.pop2(),
+        "mstore" => stack.pop2(),
+        "mload" => {
+            let popped = stack.peek().unwrap().clone();
+            let result = format!("mload: {}", popped);
+            stack.pop_and_push(result.to_string());
+        }
+        &_ => todo!(),
+    };
+}
+
+fn parse_ops(stack: &mut Stack, line: String) {
     let l = line.trim();
 
     if l.starts_with("0x") {
         stack.push(l.to_string());
+        return;
     }
-
-    if l == "calldataload" {
-        stack.pop_and_push("calldata".to_string());
-    }
-
     if l.starts_with("[") {
         stack.push("ptr".to_string());
+        return;
     }
 
-    if l == "sstore" {
-        stack.pop2();
-    }
-    if l == "mstore" {
-        stack.pop2();
-    }
-    if l == "mload" {
-        let popped = stack.peek().unwrap().clone();
-        let result = format!("mload: {}", popped);
-        stack.pop_and_push(result.to_string());
-    }
+    parse_opcode(stack, l);
 }
 
 fn parse_macro(contents: String) -> (String, usize) {
@@ -62,7 +63,7 @@ fn parse_macro(contents: String) -> (String, usize) {
         }
     }
 
-    return (macro_contents, start)
+    return (macro_contents, start);
 }
 
 fn replace_macro(start: usize, comments: String, contents: String) -> String {
@@ -70,10 +71,9 @@ fn replace_macro(start: usize, comments: String, contents: String) -> String {
     let mut content_lines: Vec<String> = contents.lines().map(|l| l.to_string()).collect();
     let comment_lines: Vec<String> = comments.lines().map(|l| l.to_string()).collect();
 
-
     let mut ii = 0;
     //replace
-    for index in start+1..=comment_lines.len()+1 {
+    for index in start + 1..=comment_lines.len() + 1 {
         content_lines[index] = comment_lines[ii].clone();
         ii += 1;
     }
@@ -88,7 +88,6 @@ fn replace_macro(start: usize, comments: String, contents: String) -> String {
     // println!("{}", final_text);
 
     return final_text;
-
 }
 
 impl Lexer {
@@ -113,7 +112,7 @@ impl Lexer {
             if l.len() > longest_line {
                 longest_line = l.len();
             }
-            parse_opcode(&mut stack, l.to_string());
+            parse_ops(&mut stack, l.to_string());
         }
 
         let printer = Printer::new(macro_contents, stack, longest_line);
