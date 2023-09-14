@@ -11,13 +11,17 @@ pub struct Lexer {
 
 fn parse_opcode(stack: &mut Stack, line: &str) {
     match line {
-        "calldataload" => stack.pop_and_push("calldata".to_string()),
         "sstore" => stack.pop2(),
         "mstore" => stack.pop2(),
         "mload" => {
             let popped = stack.peek().unwrap().clone();
             let result = format!("mload: {}", popped);
             stack.pop_and_push(result.to_string());
+        }
+        "calldataload" => {
+            let popped = stack.peek().unwrap().clone();
+            let result = format!("calldataload: {}", popped);
+            stack.pop_and_push(result.to_string())
         }
         &_ => todo!(),
     };
@@ -34,7 +38,7 @@ fn parse_line(stack: &mut Stack, line: String) {
     }
 }
 
-/// Parses a given input string to extract the contents of a macro definition 
+/// Parses a given input string to extract the contents of a macro definition
 /// and determine the line number where the macro definition starts.
 ///
 /// # Arguments

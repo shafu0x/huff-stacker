@@ -44,7 +44,6 @@ impl Stack {
         if self.values.len() == 0 {
             return;
         }
-
         let mut last_values = self.values.last().unwrap().clone();
         last_values.pop();
         last_values.push(value);
