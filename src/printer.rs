@@ -37,7 +37,7 @@ impl<'a> Printer<'a> {
         final_text
     }
 
-    pub fn write(&self, contents: String) {
+    pub fn write(&self, contents: String, path: &str) {
         let mut content_lines: Vec<String> = contents.lines().map(|l| l.to_string()).collect();
         for function in self.functions {
             let comments = self.create_comments(function);
@@ -51,7 +51,7 @@ impl<'a> Printer<'a> {
         }
 
         // println!("{}", final_text);
-        let mut file = File::create("macro.txt").expect("Error creating file");
+        let mut file = File::create(path).expect("Error creating file");
         file.write_all(final_text.as_bytes())
             .expect("Error writing file");
     }

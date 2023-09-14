@@ -119,6 +119,6 @@ impl Lexer {
     }
 
     pub fn write(&self) {
-        Printer::new(&self.functions).write(self.contents.clone());
+        Printer::new(&self.functions).write(self.contents.clone(), &self.path);
     }
 }

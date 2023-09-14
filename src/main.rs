@@ -13,5 +13,4 @@ fn main() {
     let mut lexer = Lexer::new(path);
     lexer.parse();
     lexer.write();
-    // lexer.read_file();
 }
