@@ -33,39 +33,42 @@ impl<'a> Printer<'a> {
                     .as_str(),
             );
             final_text.push_str("]");
-
             final_text.push_str("\n");
         }
         final_text
     }
 
     pub fn write(&self, contents: String) {
+        let mut content_lines: Vec<String> = contents.lines().map(|l| l.to_string()).collect();
         for function in self.functions {
             let comments = self.create_comments(function);
-            println!("{}", comments);
-            self.merge(function, contents.clone(), comments) // refactor clone
-        }
-    }
-
-    pub fn merge(&self, function: &Function, contents: String, comments: String) {
-        let mut content_lines: Vec<String> = contents.lines().map(|l| l.to_string()).collect();
-        let comment_lines: Vec<String> = comments.lines().map(|l| l.to_string()).collect();
-
-        let mut ii = 0;
-        println!("content_lines: {}", function.start);
-        //replace
-        for index in function.start + 1..=comment_lines.len() + 1 {
-            content_lines[index] = comment_lines[ii].clone();
-            ii += 1;
+            content_lines = self.merge(function, &mut content_lines, comments) // refactor clone
         }
 
-        // content lines to string with new line
         let mut final_text = String::new();
         for line in content_lines {
             final_text.push_str(line.as_str());
             final_text.push_str("\n");
         }
 
-        // println!("{}", final_text);
+        println!("{}", final_text);
+    }
+
+    pub fn merge(
+        &self,
+        function: &Function,
+        content_lines: &mut Vec<String>,
+        comments: String,
+    ) -> Vec<String> {
+        let comment_lines: Vec<String> = comments.lines().map(|l| l.to_string()).collect();
+
+        let mut ii = 0;
+        for index in function.start + 1..=function.start+comment_lines.len() {
+            content_lines[index] = comment_lines[ii].clone();
+            ii += 1;
+        }
+
+        content_lines.to_vec()
+
     }
 }
