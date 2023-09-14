@@ -60,7 +60,6 @@ impl<'a> Printer<'a> {
 
             final_text.push_str("\n");
         }
-        // println!("{}", final_text);
         final_text
     }
 
