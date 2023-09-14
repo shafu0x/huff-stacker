@@ -1,3 +1,4 @@
+
 #[derive(PartialEq, Eq)]
 pub struct Opcode {
     pub name: &'static str,
@@ -24,34 +25,3 @@ impl Opcode {
         }
     }
 }
-
-pub const SSTORE: Opcode = Opcode {
-    name: "sstore",
-    pops: 2,
-    pushes: 0,
-};
-pub const SLOAD: Opcode = Opcode {
-    name: "sload",
-    pops: 1,
-    pushes: 1,
-};
-pub const MSTORE: Opcode = Opcode {
-    name: "mstore",
-    pops: 2,
-    pushes: 0,
-};
-pub const MLOAD: Opcode = Opcode {
-    name: "mload",
-    pops: 1,
-    pushes: 1,
-};
-pub const CALLDATALOAD: Opcode = Opcode {
-    name: "calldataload",
-    pops: 1,
-    pushes: 1,
-};
-pub const RETURNDATACOPY: Opcode = Opcode {
-    name: "returndatacopy",
-    pops: 3,
-    pushes: 0,
-};

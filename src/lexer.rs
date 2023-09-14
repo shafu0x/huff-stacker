@@ -2,9 +2,9 @@ use std::fs::File;
 use std::io::Read;
 use std::io::Write;
 
+use crate::opcodes::*;
 use crate::printer::Printer;
 use crate::stack::Stack;
-use crate::opcodes::{*};
 
 pub struct Lexer {
     path: String,
@@ -16,7 +16,7 @@ fn parse_opcode(stack: &mut Stack, line: &str) {
         MSTORE => stack.update(MSTORE),
         MLOAD => stack.update(MLOAD),
         CALLDATALOAD => stack.update(CALLDATALOAD),
-        Opcode { name: &_, .. } => todo!()
+        Opcode { name: &_, .. } => todo!(),
     };
 }
 

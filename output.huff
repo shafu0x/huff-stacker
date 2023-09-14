@@ -1,8 +1,8 @@
 /* Methods */
 #define macro SET_VALUE() = takes (0) returns (0) {
     0x04              // [0x04]
-    calldataload      // [mload: 0x04]
-    [VALUE_LOCATION]  // [[value_location], mload: 0x04]
+    calldataload      // [calldataload: 0x04]
+    [VALUE_LOCATION]  // [[value_location], calldataload: 0x04]
     sstore            // []
     0x69              // [0x69]
     0x00              // [0x00, 0x69]

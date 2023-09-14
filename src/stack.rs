@@ -13,15 +13,12 @@ impl Stack {
     pub fn update(&mut self, opcode: Opcode) {
         if opcode.pops == 1 && opcode.pushes == 1 {
             let popped = self.peek().unwrap().clone();
-            let result = format!("mload: {}", popped);
+            let result = format!("{}: {}", opcode.name, popped);
             self.pop_and_push(result);
             return;
         }
-        if opcode.pops == 1 {
-            self.pop();
-        }
-        if opcode.pops == 2 {
-            self.pop2();
+        if opcode.pops > 0 {
+            self.pop(opcode.pops);
         }
     }
 
@@ -35,25 +32,15 @@ impl Stack {
         }
     }
 
-    pub fn pop(&mut self) -> Option<String> {
-        if self.values.len() == 0 {
-            return None;
-        }
-
-        let mut last_values = self.values.last().unwrap().clone();
-        let popped = last_values.pop();
-        self.values.push(last_values);
-        popped
-    }
-
-    pub fn pop2(&mut self) {
+    pub fn pop(&mut self, pops: usize) {
         if self.values.len() == 0 {
             return;
         }
 
         let mut last_values = self.values.last().unwrap().clone();
-        last_values.pop();
-        last_values.pop();
+        for _ in 0..pops {
+            last_values.pop();
+        }
         self.values.push(last_values);
     }
 
@@ -70,8 +57,4 @@ impl Stack {
     pub fn peek(&self) -> Option<&String> {
         self.values[self.values.len() - 1].last()
     }
-
-    // pub fn len(&self) -> usize {
-    //     self.values.len()
-    // }
 }
