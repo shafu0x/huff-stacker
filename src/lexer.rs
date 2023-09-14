@@ -1,6 +1,5 @@
 use std::fs::File;
 use std::io::Read;
-use std::io::Write;
 
 use crate::function::Function;
 use crate::opcodes::*;
@@ -70,30 +69,6 @@ fn parse_opcode(stack: &mut Stack, line: &str) {
     stack.update(Opcode::from_string(line));
 }
 
-fn replace_macro(start: usize, comments: String, contents: String) -> String {
-    // put lines into a vector
-    let mut content_lines: Vec<String> = contents.lines().map(|l| l.to_string()).collect();
-    let comment_lines: Vec<String> = comments.lines().map(|l| l.to_string()).collect();
-
-    let mut ii = 0;
-    //replace
-    for index in start + 1..=comment_lines.len() + 1 {
-        content_lines[index] = comment_lines[ii].clone();
-        ii += 1;
-    }
-
-    // content lines to string with new line
-    let mut final_text = String::new();
-    for line in content_lines {
-        final_text.push_str(line.as_str());
-        final_text.push_str("\n");
-    }
-
-    println!("{}", final_text);
-
-    return final_text;
-}
-
 impl Lexer {
     pub fn new(path: String) -> Lexer {
         Lexer {
@@ -128,44 +103,6 @@ impl Lexer {
         for function in self.functions.iter() {
             let printer = Printer::new(function);
             printer.write();
-
-            // let with_comments = replace_macro(function.start, comments, function.body.clone());
-
-            // // write comments to a file
-            // let mut file = File::create("output.huff").expect("Unable to create file");
-            // file.write_all(with_comments.as_bytes())
-            //     .expect("Unable to write data");
         }
-    }
-
-    pub fn read_file(&self) {
-        let mut file = File::open(self.path.as_str()).expect("File not found");
-        let mut contents = String::new();
-        file.read_to_string(&mut contents)
-            .expect("Error reading file");
-
-        // TODO: refactor the clone
-        let (macro_lines, start) = get_macro(contents.clone());
-
-        let mut stack = Stack::new();
-
-        let mut longest_line = 0;
-
-        for l in macro_lines.lines() {
-            if l.len() > longest_line {
-                longest_line = l.len();
-            }
-            parse_line(&mut stack, l.to_string());
-        }
-
-        // let printer = Printer::new(macro_lines, stack, longest_line);
-        // let comments = printer.print();
-
-        // let with_comments = replace_macro(start, comments, contents);
-
-        // // write comments to a file
-        // let mut file = File::create("output.huff").expect("Unable to create file");
-        // file.write_all(with_comments.as_bytes())
-        //     .expect("Unable to write data");
     }
 }
