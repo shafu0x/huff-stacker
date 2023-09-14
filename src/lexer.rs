@@ -11,13 +11,7 @@ pub struct Lexer {
 }
 
 fn parse_opcode(stack: &mut Stack, line: &str) {
-    match Opcode::from_string(line) {
-        SSTORE => stack.update(SSTORE),
-        MSTORE => stack.update(MSTORE),
-        MLOAD => stack.update(MLOAD),
-        CALLDATALOAD => stack.update(CALLDATALOAD),
-        Opcode { name: &_, .. } => todo!(),
-    };
+    stack.update(Opcode::from_string(line));
 }
 
 fn parse_line(stack: &mut Stack, line: String) {
