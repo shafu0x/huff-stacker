@@ -23,7 +23,7 @@ fn parse_opcode(stack: &mut Stack, line: &str) {
     };
 }
 
-fn parse_ops(stack: &mut Stack, line: String) {
+fn parse_line(stack: &mut Stack, line: String) {
     let l = line.trim();
 
     if l.starts_with("0x") {
@@ -38,27 +38,40 @@ fn parse_ops(stack: &mut Stack, line: String) {
     parse_opcode(stack, l);
 }
 
+/// Parses a given input string to extract the contents of a macro definition 
+/// and determine the line number where the macro definition starts.
+///
+/// # Arguments
+///
+/// * `contents` - The input string containing code that may include a macro definition.
+///
+/// # Returns
+///
+/// A tuple containing:
+/// - A string representing the contents of the macro.
+/// - The line number where the macro definition starts.
+///
 fn parse_macro(contents: String) -> (String, usize) {
     let mut macro_contents = String::new();
-
-    let mut start = 0;
+    let mut start = 0; // line number where macro starts
     let mut in_macro = false;
-    for (i, l) in contents.lines().enumerate() {
+
+    for (line_number, line) in contents.lines().enumerate() {
         // in macro
-        if in_macro && !l.starts_with("}") {
+        if in_macro && !line.starts_with("}") {
             // add line to macro_contents with a new line
-            macro_contents.push_str(l);
+            macro_contents.push_str(line);
             macro_contents.push_str("\n");
         }
 
         // start of macro
-        if !in_macro && l.starts_with("#define macro") {
-            start = i;
+        if !in_macro && line.starts_with("#define macro") {
+            start = line_number;
             in_macro = true;
         }
 
         // end of macro
-        if in_macro && l.starts_with("}") {
+        if in_macro && line.starts_with("}") {
             in_macro = false;
         }
     }
@@ -85,7 +98,7 @@ fn replace_macro(start: usize, comments: String, contents: String) -> String {
         final_text.push_str("\n");
     }
 
-    // println!("{}", final_text);
+    println!("{}", final_text);
 
     return final_text;
 }
@@ -112,7 +125,7 @@ impl Lexer {
             if l.len() > longest_line {
                 longest_line = l.len();
             }
-            parse_ops(&mut stack, l.to_string());
+            parse_line(&mut stack, l.to_string());
         }
 
         let printer = Printer::new(macro_contents, stack, longest_line);
