@@ -102,7 +102,7 @@ impl Lexer {
         }
     }
 
-    pub fn parse(&self) {
+    pub fn parse(&mut self) {
         let mut file = File::open(self.path.as_str()).expect("File not found");
         let mut contents = String::new();
         file.read_to_string(&mut contents)
@@ -119,6 +119,8 @@ impl Lexer {
             }
             parse_line(&mut stack, line.to_string());
         }
+
+        self.functions.push(Function::new(start, macro_lines, stack));
     }
 
     pub fn read_file(&self) {
