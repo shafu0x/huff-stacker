@@ -1,3 +1,5 @@
+use crate::opcodes::Opcode;
+
 #[derive(Debug)]
 pub struct Stack {
     pub values: Vec<Vec<String>>,
@@ -6,6 +8,21 @@ pub struct Stack {
 impl Stack {
     pub fn new() -> Stack {
         Stack { values: Vec::new() }
+    }
+
+    pub fn update(&mut self, opcode: Opcode) {
+        if opcode.pops == 1 && opcode.pushes == 1 {
+            let popped = self.peek().unwrap().clone();
+            let result = format!("mload: {}", popped);
+            self.pop_and_push(result);
+            return;
+        }
+        if opcode.pops == 1 {
+            self.pop();
+        }
+        if opcode.pops == 2 {
+            self.pop2();
+        }
     }
 
     pub fn push(&mut self, value: String) {

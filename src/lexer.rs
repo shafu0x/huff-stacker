@@ -12,18 +12,10 @@ pub struct Lexer {
 
 fn parse_opcode(stack: &mut Stack, line: &str) {
     match Opcode::from_string(line) {
-        SSTORE => stack.pop2(),
-        MSTORE => stack.pop2(),
-        MLOAD => {
-            let popped = stack.peek().unwrap().clone();
-            let result = format!("mload: {}", popped);
-            stack.pop_and_push(result.to_string());
-        }
-        CALLDATALOAD => {
-            let popped = stack.peek().unwrap().clone();
-            let result = format!("calldataload: {}", popped);
-            stack.pop_and_push(result.to_string())
-        }
+        SSTORE => stack.update(SSTORE),
+        MSTORE => stack.update(MSTORE),
+        MLOAD => stack.update(MLOAD),
+        CALLDATALOAD => stack.update(CALLDATALOAD),
         Opcode { name: &_, .. } => todo!()
     };
 }
