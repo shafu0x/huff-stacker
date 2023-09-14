@@ -108,12 +108,12 @@ impl Lexer {
         file.read_to_string(&mut contents)
             .expect("Error reading file");
 
-        let (macro_lines, start) = get_macro(contents.clone());
+        let (function_body, start) = get_macro(contents.clone());
 
         let mut stack = Stack::new();
         let mut longest_line = 0;
 
-        for line in macro_lines.lines() {
+        for line in function_body.lines() {
             if line.len() > longest_line {
                 longest_line = line.len();
             }
@@ -121,7 +121,21 @@ impl Lexer {
         }
 
         self.functions
-            .push(Function::new(start, macro_lines, stack));
+            .push(Function::new(start, function_body, stack, longest_line));
+    }
+
+    pub fn write(&self) {
+        for function in self.functions.iter() {
+            let printer = Printer::new(function);
+            let comments = printer.print();
+
+            // let with_comments = replace_macro(function.start, comments, function.body.clone());
+
+            // // write comments to a file
+            // let mut file = File::create("output.huff").expect("Unable to create file");
+            // file.write_all(with_comments.as_bytes())
+            //     .expect("Unable to write data");
+        }
     }
 
     pub fn read_file(&self) {
@@ -144,14 +158,14 @@ impl Lexer {
             parse_line(&mut stack, l.to_string());
         }
 
-        let printer = Printer::new(macro_lines, stack, longest_line);
-        let comments = printer.print();
+        // let printer = Printer::new(macro_lines, stack, longest_line);
+        // let comments = printer.print();
 
-        let with_comments = replace_macro(start, comments, contents);
+        // let with_comments = replace_macro(start, comments, contents);
 
-        // write comments to a file
-        let mut file = File::create("output.huff").expect("Unable to create file");
-        file.write_all(with_comments.as_bytes())
-            .expect("Unable to write data");
+        // // write comments to a file
+        // let mut file = File::create("output.huff").expect("Unable to create file");
+        // file.write_all(with_comments.as_bytes())
+        //     .expect("Unable to write data");
     }
 }

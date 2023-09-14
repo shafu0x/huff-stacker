@@ -1,24 +1,21 @@
 use crate::stack::Stack;
+use crate::function::Function;
 
-pub struct Printer {
-    macro_content: String,
-    stack: Stack,
-    longest_line: usize,
+pub struct Printer<'a> {
+    function: &'a Function
 }
 
-impl Printer {
-    pub fn new(macro_content: String, stack: Stack, longest_line: usize) -> Printer {
+impl<'a> Printer<'a> {
+    pub fn new(function: &'a Function) -> Printer<'a> {
         Printer {
-            macro_content,
-            stack,
-            longest_line,
+            function
         }
     }
 
     pub fn print(&self) -> String {
         let mut final_text = String::new();
-        for (i, line) in self.macro_content.lines().enumerate() {
-            let final_len = self.longest_line - line.len() + 1;
+        for (i, line) in self.function.body.lines().enumerate() {
+            let final_len = self.function.longest_line - line.len() + 1;
             final_text.push_str(line);
             for _ in 0..final_len {
                 final_text.push_str(" ");
@@ -26,7 +23,7 @@ impl Printer {
             final_text.push_str(" // ");
             final_text.push_str("[");
             final_text.push_str(
-                self.stack.values[i]
+                self.function.stack.values[i]
                     .iter()
                     .rev()
                     .map(|v| v.to_string())
@@ -38,7 +35,7 @@ impl Printer {
 
             final_text.push_str("\n");
         }
-        // println!("{}", final_text);
+        println!("{}", final_text);
         final_text
     }
 }
