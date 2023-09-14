@@ -42,6 +42,7 @@ impl<'a> Printer<'a> {
     pub fn write(&self, contents: String) {
         for function in self.functions {
             let comments = self.create_comments(function);
+            println!("{}", comments);
             self.merge(function, contents.clone(), comments) // refactor clone
         }
     }
@@ -64,7 +65,6 @@ impl<'a> Printer<'a> {
            final_text.push_str("\n");
        }
 
-       println!("{}", final_text);
-
+       // println!("{}", final_text);
     }
 }
