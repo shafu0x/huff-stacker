@@ -2,7 +2,6 @@ use std::fs::File;
 use std::io::Write;
 
 use crate::function::Function;
-use crate::stack::Stack;
 
 pub struct Printer<'a> {
     functions: &'a Vec<Function>,
@@ -65,13 +64,12 @@ impl<'a> Printer<'a> {
     ) -> Vec<String> {
         let comment_lines: Vec<String> = comments.lines().map(|l| l.to_string()).collect();
 
-        let mut ii = 0;
-        for index in function.start + 1..=function.start+comment_lines.len() {
-            content_lines[index] = comment_lines[ii].clone();
-            ii += 1;
+        let mut i = 0;
+        for index in function.start + 1..=function.start + comment_lines.len() {
+            content_lines[index] = comment_lines[i].clone();
+            i += 1;
         }
 
         content_lines.to_vec()
-
     }
 }

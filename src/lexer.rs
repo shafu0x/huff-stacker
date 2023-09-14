@@ -99,7 +99,6 @@ impl Lexer {
             .expect("Error reading file");
 
         let mut last_start = 0;
-        let mut i = 0;
         while let Some((function_body, start)) = get_function(contents.clone(), last_start) {
             self.contents = contents.clone();
             last_start = start;
@@ -116,8 +115,6 @@ impl Lexer {
 
             self.functions
                 .push(Function::new(start, function_body, stack, longest_line));
-
-            i += 1;
         }
     }
 
