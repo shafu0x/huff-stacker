@@ -6,7 +6,7 @@ use crate::opcodes::*;
 use crate::printer::Printer;
 use crate::stack::Stack;
 
-pub struct Lexer {
+pub struct Parser {
     path: String,
     functions: Vec<Function>,
     contents: String,
@@ -73,7 +73,7 @@ fn parse_line(stack: &mut Stack, line: String) {
 
     match trimmed_line {
         line if line.starts_with("0x") => stack.push(line.to_string()),
-        line if line.starts_with("[") => stack.push(line.to_string().to_lowercase()),
+        line if line.starts_with("[") => stack.push(line.to_lowercase()),
         line if line.starts_with("<") => stack.push(line.to_string()),
         _ => parse_opcode(stack, trimmed_line), // Handle other cases or ignore them
     }
@@ -83,9 +83,9 @@ fn parse_opcode(stack: &mut Stack, line: &str) {
     stack.update(Opcode::from_string(line));
 }
 
-impl Lexer {
-    pub fn new(path: String) -> Lexer {
-        Lexer {
+impl Parser {
+    pub fn new(path: String) -> Parser {
+        Parser {
             path: path,
             functions: Vec::new(),
             contents: String::new(),
