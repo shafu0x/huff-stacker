@@ -1,5 +1,6 @@
 use std::fs::File;
 use std::io::Read;
+use regex::Regex;
 
 use crate::function::Function;
 use crate::opcodes::*;
@@ -49,6 +50,7 @@ fn get_function(contents: String, last_start: usize) -> Option<(String, usize)> 
             start = line_number + skip;
             in_macro = true;
             found_function = true;
+            get_takes(line);
         }
 
         // end of macro
@@ -63,6 +65,22 @@ fn get_function(contents: String, last_start: usize) -> Option<(String, usize)> 
     } else {
         None::<(String, usize)>
     }
+}
+
+fn get_takes(line: &str) -> i32 {
+    let re = Regex::new(r"takes \((\d+)\)").unwrap();
+
+    if let Some(captures) = re.captures(line) {
+        if let Some(value_str) = captures.get(1) {
+            if let Ok(value) = value_str.as_str().parse::<i32>() {
+                println!("Parsed value as integer: {}", value);
+                return value;
+            }
+        }
+    }
+
+    println!("Failed to parse value as an integer.");
+    0
 }
 
 /// This function takes a mutable reference to a `Stack` and a `line` as input. It trims the

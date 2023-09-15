@@ -51,7 +51,7 @@ impl<'a> Printer<'a> {
             final_text.push_str("\n");
         }
 
-        let mut file = File::create(path).expect("Error creating file");
+        let mut file = File::create("out.huff").expect("Error creating file");
         file.write_all(final_text.as_bytes())
             .expect("Error writing file");
     }
