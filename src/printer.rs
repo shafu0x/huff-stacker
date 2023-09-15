@@ -66,7 +66,10 @@ impl<'a> Printer<'a> {
 
         let mut i = 0;
         for index in function.start + 1..=function.start + comment_lines.len() {
-            content_lines[index] = comment_lines[i].clone();
+            let content_line = content_lines[index].trim().clone();
+            if !content_line.starts_with("//") {
+                content_lines[index] = comment_lines[i].clone();
+            }
             i += 1;
         }
 
