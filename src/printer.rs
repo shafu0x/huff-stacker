@@ -56,6 +56,7 @@ impl<'a> Printer<'a> {
             .expect("Error writing file");
     }
 
+
     pub fn merge(
         &self,
         function: &Function,
@@ -68,11 +69,19 @@ impl<'a> Printer<'a> {
         for index in function.start + 1..=function.start + comment_lines.len() {
             let content_line = content_lines[index].trim().clone();
             if !content_line.starts_with("//") {
-                content_lines[index] = comment_lines[i].clone();
+                content_lines[index] = add_stop_sign(comment_lines[i].clone());
             }
             i += 1;
         }
 
         content_lines.to_vec()
     }
+}
+
+fn add_stop_sign(mut line: String) -> String {
+    let stop_sign = " -- end";
+    if line.contains("stop") {
+        line.push_str(stop_sign)
+    } 
+    return line;
 }

@@ -20,10 +20,12 @@ impl Stack {
         if opcode.pops > 0 {
             self.pop(opcode.pops);
         }
+        if opcode.pops == 0 && opcode.pushes == 0 {
+            self.dup_last();
+        }
     }
 
-    // duplicate the last stack
-    pub fn dup(&mut self) {
+    pub fn dup_last(&mut self) {
         let last_values = self.values.last().unwrap().clone();
         self.values.push(last_values);
     }
