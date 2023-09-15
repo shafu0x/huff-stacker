@@ -75,7 +75,7 @@ fn parse_line(stack: &mut Stack, line: String) {
         line if line.starts_with("0x") => stack.push(line.to_string()), // constant
         line if line.starts_with("[") => stack.push(line.to_lowercase()), // reference
         line if line.starts_with("<") => stack.push(line.to_string()),
-        line if line.starts_with("//") => stack.dup(), // comment
+        line if line.starts_with("//") => stack.dup_last(), // comment
         _ => parse_opcode(stack, trimmed_line),
     }
 }
