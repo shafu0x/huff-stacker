@@ -2,6 +2,7 @@ use std::fs::File;
 use std::io::Write;
 
 use crate::function::Function;
+use crate::opcodes::{STOP};
 
 pub struct Printer<'a> {
     functions: &'a Vec<Function>,
@@ -50,13 +51,12 @@ impl<'a> Printer<'a> {
             final_text.push_str("\n");
         }
 
-        // println!("{}", final_text);
         let mut file = File::create(path).expect("Error creating file");
         file.write_all(final_text.as_bytes())
             .expect("Error writing file");
     }
 
-
+    // merge the comments with the original file contents
     pub fn merge(
         &self,
         function: &Function,
@@ -69,7 +69,12 @@ impl<'a> Printer<'a> {
         for index in function.start + 1..=function.start + comment_lines.len() {
             let content_line = content_lines[index].trim().clone();
             if !content_line.starts_with("//") {
-                content_lines[index] = add_stop_sign(comment_lines[i].clone());
+                let (content_line, is_stop) = is_stop(comment_lines[i].clone());
+                content_lines[index] = content_line;
+
+                if is_stop {
+                    break;
+                }
             }
             i += 1;
         }
@@ -78,10 +83,11 @@ impl<'a> Printer<'a> {
     }
 }
 
-fn add_stop_sign(mut line: String) -> String {
+fn is_stop(mut line: String) -> (String, bool) {
     let stop_sign = " -- end";
-    if line.contains("stop") {
-        line.push_str(stop_sign)
-    } 
-    return line;
+    if line.contains(STOP.name) {
+        line.push_str(stop_sign);
+        return (line, true);
+    }
+    return (line, false);
 }
