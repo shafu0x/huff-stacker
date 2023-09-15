@@ -1,6 +1,6 @@
 mod function;
-mod parser;
 mod opcodes;
+mod parser;
 mod printer;
 mod stack;
 

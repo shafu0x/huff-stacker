@@ -22,9 +22,9 @@ impl Stack {
         }
     }
 
-    // duplicate the last stack from values
+    // duplicate the last stack
     pub fn dup(&mut self) {
-        let mut last_values = self.values.last().unwrap().clone();
+        let last_values = self.values.last().unwrap().clone();
         self.values.push(last_values);
     }
 
