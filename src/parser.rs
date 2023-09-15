@@ -72,10 +72,11 @@ fn parse_line(stack: &mut Stack, line: String) {
     let trimmed_line = line.trim();
 
     match trimmed_line {
-        line if line.starts_with("0x") => stack.push(line.to_string()),
-        line if line.starts_with("[") => stack.push(line.to_lowercase()),
+        line if line.starts_with("0x") => stack.push(line.to_string()), // constant
+        line if line.starts_with("[") => stack.push(line.to_lowercase()), // reference
         line if line.starts_with("<") => stack.push(line.to_string()),
-        _ => parse_opcode(stack, trimmed_line), // Handle other cases or ignore them
+        line if line.starts_with("//") => stack.dup(), // comment
+        _ => parse_opcode(stack, trimmed_line),
     }
 }
 

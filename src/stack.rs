@@ -22,6 +22,12 @@ impl Stack {
         }
     }
 
+    // duplicate the last stack
+    pub fn dup(&mut self) {
+        let last_values = self.values.last().unwrap().clone();
+        self.values.push(last_values);
+    }
+
     pub fn push(&mut self, value: String) {
         if self.values.len() == 0 {
             self.values.push(vec![value]);
