@@ -32,10 +32,9 @@ fn generate_stack(function: &Function) -> Stack {
 /// A tuple containing:
 /// - A string representing the contents of the macro.
 /// - The line number where the macro definition starts.
-fn parse_function(contents: String, last_start: usize) -> Option<(Function)> {
+fn parse_function(contents: String, last_start: usize) -> Option<Function> {
     let mut body = String::new();
     let mut start = 0; // line number where macro starts
-    let mut takes = 0;
     let mut in_macro = false;
 
     let mut found_function = false;
@@ -86,7 +85,6 @@ fn get_takes(line: &str) -> i32 {
     if let Some(captures) = re.captures(line) {
         if let Some(value_str) = captures.get(1) {
             if let Ok(value) = value_str.as_str().parse::<i32>() {
-                println!("Parsed value as integer: {}", value);
                 return value;
             }
         }
