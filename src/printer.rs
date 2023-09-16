@@ -2,7 +2,7 @@ use std::fs::File;
 use std::io::Write;
 
 use crate::function::Function;
-use crate::opcodes::{STOP};
+use crate::opcodes::STOP;
 
 pub struct Printer<'a> {
     functions: &'a Vec<Function>,

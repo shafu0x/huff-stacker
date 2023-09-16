@@ -1,6 +1,6 @@
+use regex::Regex;
 use std::fs::File;
 use std::io::Read;
-use regex::Regex;
 
 use crate::function::Function;
 use crate::opcodes::*;
@@ -72,9 +72,8 @@ fn parse_function(contents: String, last_start: usize) -> Option<(Function)> {
         }
     }
 
-    function.body = body;
-
     if found_function {
+        function.body = body;
         function.stack = generate_stack(&function);
         Some(function)
     } else {
