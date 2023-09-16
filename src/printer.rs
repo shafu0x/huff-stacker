@@ -2,7 +2,7 @@ use std::fs::File;
 use std::io::Write;
 
 use crate::function::Function;
-use crate::opcodes::{STOP};
+use crate::opcodes::STOP;
 
 pub struct Printer<'a> {
     functions: &'a Vec<Function>,
@@ -16,7 +16,7 @@ impl<'a> Printer<'a> {
     pub fn create_comments(&self, function: &Function) -> String {
         let mut final_text = String::new();
         for (i, line) in function.body.lines().enumerate() {
-            let final_len = function.longest_line - line.len() + 1;
+            let final_len = function.longest_line() - line.len() + 1;
             final_text.push_str(line);
             for _ in 0..final_len {
                 final_text.push_str(" ");
@@ -51,7 +51,7 @@ impl<'a> Printer<'a> {
             final_text.push_str("\n");
         }
 
-        let mut file = File::create("out.huff").expect("Error creating file");
+        let mut file = File::create(path).expect("Error creating file");
         file.write_all(final_text.as_bytes())
             .expect("Error writing file");
     }

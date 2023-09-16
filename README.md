@@ -23,3 +23,15 @@ To this:
     sstore              // []
 }
 ```
+
+## How to use
+
+```console
+$ cargo run <INPUT_FILE> <OUTPUT_FILE>
+```
+
+#### Example
+
+```console
+$ cargo run /home/shafu/huff-stack-generator/macro.huff /home/shafu/huff-stack-generator/out.huff
+```

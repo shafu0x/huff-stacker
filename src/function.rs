@@ -4,16 +4,20 @@ pub struct Function {
     pub start: usize,
     pub body: String,
     pub stack: Stack,
-    pub longest_line: usize,
+    pub takes: i32,
 }
 
 impl Function {
-    pub fn new(start: usize, body: String, stack: Stack, longest_line: usize) -> Function {
+    pub fn new() -> Function {
         Function {
-            start,
-            body,
-            stack,
-            longest_line,
+            start: 0,
+            body: String::new(),
+            stack: Stack::new(),
+            takes: 0,
         }
+    }
+
+    pub fn longest_line(&self) -> usize {
+        self.body.lines().map(|line| line.len()).max().unwrap_or(0)
     }
 }
