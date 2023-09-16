@@ -28,6 +28,7 @@ pub struct Parser {
 fn get_function(contents: String, last_start: usize) -> Option<(String, usize)> {
     let mut macro_lines = String::new();
     let mut start = 0; // line number where macro starts
+    let mut takes = 0;
     let mut in_macro = false;
 
     let mut found_function = false;
@@ -50,7 +51,7 @@ fn get_function(contents: String, last_start: usize) -> Option<(String, usize)> 
             start = line_number + skip;
             in_macro = true;
             found_function = true;
-            get_takes(line);
+            takes = get_takes(line);
         }
 
         // end of macro
@@ -126,14 +127,11 @@ impl Parser {
             let mut longest_line = 0;
 
             for line in function_body.lines() {
-                if line.len() > longest_line {
-                    longest_line = line.len();
-                }
                 parse_line(&mut stack, line.to_string());
             }
 
             self.functions
-                .push(Function::new(start, function_body, stack, longest_line));
+                .push(Function::new(start, function_body, stack));
         }
     }
 

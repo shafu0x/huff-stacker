@@ -5,15 +5,21 @@ pub struct Function {
     pub body: String,
     pub stack: Stack,
     pub longest_line: usize,
+    pub takes: usize,
 }
 
 impl Function {
-    pub fn new(start: usize, body: String, stack: Stack, longest_line: usize) -> Function {
+    pub fn new(start: usize, body: String, stack: Stack) -> Function {
         Function {
             start,
-            body,
+            body: body.clone(),
             stack,
-            longest_line,
+            longest_line: Function::longest_line(&body),
+            takes: 0, 
         }
+    }
+
+    fn longest_line(body: &str) -> usize {
+        body.lines().map(|line| line.len()).max().unwrap_or(0)
     }
 }
