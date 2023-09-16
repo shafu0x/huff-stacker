@@ -16,7 +16,7 @@ impl<'a> Printer<'a> {
     pub fn create_comments(&self, function: &Function) -> String {
         let mut final_text = String::new();
         for (i, line) in function.body.lines().enumerate() {
-            let final_len = function.longest_line - line.len() + 1;
+            let final_len = function.longest_line() - line.len() + 1;
             final_text.push_str(line);
             for _ in 0..final_len {
                 final_text.push_str(" ");

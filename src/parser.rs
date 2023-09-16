@@ -13,6 +13,14 @@ pub struct Parser {
     contents: String,
 }
 
+fn generate_stack(function: &Function) -> Stack {
+    let mut stack = Stack::new();
+    for line in function.body.lines() {
+        parse_line(&mut stack, line.to_string());
+    }
+    stack
+}
+
 /// Parses a given input string to extract the contents of a macro definition
 /// and determine the line number where the macro definition starts.
 ///
@@ -25,13 +33,15 @@ pub struct Parser {
 /// A tuple containing:
 /// - A string representing the contents of the macro.
 /// - The line number where the macro definition starts.
-fn get_function(contents: String, last_start: usize) -> Option<(String, usize)> {
-    let mut macro_lines = String::new();
+fn parse_function(contents: String, last_start: usize) -> Option<(Function)> {
+    let mut body = String::new();
     let mut start = 0; // line number where macro starts
     let mut takes = 0;
     let mut in_macro = false;
 
     let mut found_function = false;
+
+    let mut function = Function::new();
 
     let mut skip = 0;
     if last_start > 0 {
@@ -41,17 +51,18 @@ fn get_function(contents: String, last_start: usize) -> Option<(String, usize)> 
     for (line_number, line) in contents.lines().skip(skip).enumerate() {
         // in macro
         if in_macro && !line.starts_with("}") {
-            // add line to macro_lines with a new line
-            macro_lines.push_str(line);
-            macro_lines.push_str("\n");
+            // add line to body with a new line
+            body.push_str(line);
+            body.push_str("\n");
         }
 
         // start of macro
         if !in_macro && line.starts_with("#define macro") {
             start = line_number + skip;
-            in_macro = true;
+            function.start = start;
+            function.takes = get_takes(line);
             found_function = true;
-            takes = get_takes(line);
+            in_macro = true;
         }
 
         // end of macro
@@ -61,10 +72,13 @@ fn get_function(contents: String, last_start: usize) -> Option<(String, usize)> 
         }
     }
 
+    function.body = body;
+
     if found_function {
-        Some((macro_lines, start))
+        function.stack = generate_stack(&function);
+        Some(function)
     } else {
-        None::<(String, usize)>
+        None::<Function>
     }
 }
 
@@ -117,21 +131,13 @@ impl Parser {
         let mut contents = String::new();
         file.read_to_string(&mut contents)
             .expect("Error reading file");
+        self.contents = contents.clone();
 
         let mut last_start = 0;
-        while let Some((function_body, start)) = get_function(contents.clone(), last_start) {
-            self.contents = contents.clone();
-            last_start = start;
+        while let Some(function) = parse_function(contents.clone(), last_start) {
+            last_start = function.start;
 
-            let mut stack = Stack::new();
-            let mut longest_line = 0;
-
-            for line in function_body.lines() {
-                parse_line(&mut stack, line.to_string());
-            }
-
-            self.functions
-                .push(Function::new(start, function_body, stack));
+            self.functions.push(function);
         }
     }
 
