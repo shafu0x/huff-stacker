@@ -8,7 +8,6 @@ use crate::printer::Printer;
 use crate::stack::Stack;
 
 pub struct Parser {
-    path: String,
     functions: Vec<Function>,
     contents: String,
 }
@@ -117,16 +116,15 @@ fn parse_opcode(stack: &mut Stack, line: &str) {
 }
 
 impl Parser {
-    pub fn new(path: String) -> Parser {
+    pub fn new() -> Parser {
         Parser {
-            path: path,
             functions: Vec::new(),
             contents: String::new(),
         }
     }
 
-    pub fn parse(&mut self) {
-        let mut file = File::open(self.path.as_str()).expect("File not found");
+    pub fn parse(&mut self, path: &str) {
+        let mut file = File::open(path).expect("File not found");
         let mut contents = String::new();
         file.read_to_string(&mut contents)
             .expect("Error reading file");
@@ -140,7 +138,7 @@ impl Parser {
         }
     }
 
-    pub fn write(&self) {
-        Printer::new(&self.functions).write(self.contents.clone(), &self.path);
+    pub fn write(&self, path: &str) {
+        Printer::new(&self.functions).write(self.contents.clone(), path);
     }
 }
