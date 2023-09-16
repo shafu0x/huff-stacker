@@ -30,12 +30,11 @@ fn generate_stack(function: &mut Function) -> Stack {
 /// # Arguments
 ///
 /// * `contents` - The input string containing code that may include a macro definition.
+/// * `last_start` - The line number where the last macro definition started.
 ///
 /// # Returns
 ///
-/// A tuple containing:
-/// - A string representing the contents of the macro.
-/// - The line number where the macro definition starts.
+/// Optional function
 fn parse_function(contents: String, last_start: usize) -> Option<Function> {
     let mut function = Function::new();
     let mut body = String::new();
