@@ -12,9 +12,12 @@ pub struct Parser {
     contents: String,
 }
 
-fn generate_stack(function: &Function) -> Stack {
+fn generate_stack(function: &mut Function) -> Stack {
     let mut stack = Stack::new();
     if function.takes > 0 {
+        // add one new line to the function body
+        function.body = format!("// takes\n{}", function.body);
+        println!("function body: {}", function.body);
         let mut takes = Vec::new();
         for i in 0..function.takes {
             takes.push(format!("a{}", i));
@@ -79,7 +82,7 @@ fn parse_function(contents: String, last_start: usize) -> Option<Function> {
 
     if found_function {
         function.body = body;
-        function.stack = generate_stack(&function);
+        function.stack = generate_stack(&mut function);
         Some(function)
     } else {
         None::<Function>
