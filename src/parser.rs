@@ -18,10 +18,6 @@ pub struct Parser {
 
 fn generate_stack(function: &mut Function) -> Stack {
     let mut stack = Stack::new();
-    if function.takes > 0 {
-        // we are adding a new line to the body
-        function.body = format!("{}\n{}", TAKES_PLACEHOLDER, function.body);
-    }
     for line in function.body.lines() {
         parse_line(&mut stack, line.to_string(), function.takes);
     }
@@ -57,28 +53,31 @@ fn parse_function(contents: String, last_start: usize) -> Option<Function> {
     for (line_number, line) in contents.lines().skip(skip).enumerate() {
         // in macro
         if in_macro && !line.starts_with("}") {
-            // add line to body with a new line
             body.push_str(line);
             body.push_str("\n");
         }
 
         // start of macro
-        if !in_macro && line.starts_with("#define macro") {
+        if line.starts_with("#define macro") {
             start = line_number + skip;
             function.start = start;
-            function.takes = get_takes(line);
+            function.takes = parse_takes(line);
             found_function = true;
             in_macro = true;
         }
 
         // end of macro
-        if in_macro && line.starts_with("}") {
+        if line.starts_with("}") {
             in_macro = false;
             break;
         }
     }
 
     if found_function {
+        // if the function takes arguments, we need to insert a placeholder
+        if function.takes > 0 {
+            body = format!("{}\n{}", TAKES_PLACEHOLDER, body);
+        }
         function.body = body;
         function.stack = generate_stack(&mut function);
         Some(function)
@@ -87,7 +86,8 @@ fn parse_function(contents: String, last_start: usize) -> Option<Function> {
     }
 }
 
-fn get_takes(line: &str) -> i32 {
+// get the number of arguments a function takes
+fn parse_takes(line: &str) -> i32 {
     let re = Regex::new(r"takes \((\d+)\)").unwrap();
 
     if let Some(captures) = re.captures(line) {
@@ -97,8 +97,6 @@ fn get_takes(line: &str) -> i32 {
             }
         }
     }
-
-    println!("Failed to parse value as an integer.");
     0
 }
 
@@ -114,12 +112,8 @@ fn parse_line(stack: &mut Stack, line: String, takes: i32) {
         line if line.starts_with("[") => stack.push(line.to_lowercase()), // reference
         line if line.starts_with("<") => stack.push(line.to_string()),
         line if line.starts_with("//") => stack.dup_last(), // comment
-        _ => parse_opcode(stack, trimmed_line),
+        _ => stack.update(Opcode::from_string(trimmed_line)),
     }
-}
-
-fn parse_opcode(stack: &mut Stack, line: &str) {
-    stack.update(Opcode::from_string(line));
 }
 
 impl Parser {
