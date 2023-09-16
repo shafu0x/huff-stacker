@@ -7,6 +7,10 @@ use crate::opcodes::*;
 use crate::printer::Printer;
 use crate::stack::Stack;
 
+// We insert this placeholder into a function if it takes more than 0 arguments.
+// The stack usese this placeholder to determine where to insert the arguments.
+const TAKES_PLACEHOLDER: &str = "$takes$";
+
 pub struct Parser {
     functions: Vec<Function>,
     contents: String,
@@ -16,7 +20,7 @@ fn generate_stack(function: &mut Function) -> Stack {
     let mut stack = Stack::new();
     if function.takes > 0 {
         // we are adding a new line to the body
-        function.body = format!("takes\n{}", function.body);
+        function.body = format!("{}\n{}", TAKES_PLACEHOLDER, function.body);
     }
     for line in function.body.lines() {
         parse_line(&mut stack, line.to_string(), function.takes);
@@ -105,10 +109,10 @@ fn parse_line(stack: &mut Stack, line: String, takes: i32) {
     let trimmed_line = line.trim();
 
     match trimmed_line {
+        line if line.starts_with(TAKES_PLACEHOLDER) => stack.push_takes(takes), 
         line if line.starts_with("0x") => stack.push(line.to_string()), // constant
         line if line.starts_with("[") => stack.push(line.to_lowercase()), // reference
         line if line.starts_with("<") => stack.push(line.to_string()),
-        line if line.starts_with("takes") => stack.push_takes(takes), 
         line if line.starts_with("//") => stack.dup_last(), // comment
         _ => parse_opcode(stack, trimmed_line),
     }
