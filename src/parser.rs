@@ -12,10 +12,14 @@ pub struct Parser {
     contents: String,
 }
 
-fn generate_stack(function: &Function) -> Stack {
+fn generate_stack(function: &mut Function) -> Stack {
     let mut stack = Stack::new();
+    if function.takes > 0 {
+        // we are adding a new line to the body
+        function.body = format!("takes\n{}", function.body);
+    }
     for line in function.body.lines() {
-        parse_line(&mut stack, line.to_string());
+        parse_line(&mut stack, line.to_string(), function.takes);
     }
     stack
 }
@@ -72,7 +76,7 @@ fn parse_function(contents: String, last_start: usize) -> Option<Function> {
 
     if found_function {
         function.body = body;
-        function.stack = generate_stack(&function);
+        function.stack = generate_stack(&mut function);
         Some(function)
     } else {
         None::<Function>
@@ -97,13 +101,14 @@ fn get_takes(line: &str) -> i32 {
 /// This function takes a mutable reference to a `Stack` and a `line` as input. It trims the
 /// `line`, checks its content, and pushes the result onto the `Stack` or delegates to `parse_opcode`
 /// for further processing if none of the specific cases match.
-fn parse_line(stack: &mut Stack, line: String) {
+fn parse_line(stack: &mut Stack, line: String, takes: i32) {
     let trimmed_line = line.trim();
 
     match trimmed_line {
         line if line.starts_with("0x") => stack.push(line.to_string()), // constant
         line if line.starts_with("[") => stack.push(line.to_lowercase()), // reference
         line if line.starts_with("<") => stack.push(line.to_string()),
+        line if line.starts_with("takes") => stack.push_takes(takes), 
         line if line.starts_with("//") => stack.dup_last(), // comment
         _ => parse_opcode(stack, trimmed_line),
     }

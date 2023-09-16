@@ -26,7 +26,6 @@ impl<'a> Printer<'a> {
             final_text.push_str(
                 function.stack.values[i]
                     .iter()
-                    .rev()
                     .map(|v| v.to_string())
                     .collect::<Vec<_>>()
                     .join(", ")
@@ -66,7 +65,10 @@ impl<'a> Printer<'a> {
         let comment_lines: Vec<String> = comments.lines().map(|l| l.to_string()).collect();
 
         let mut i = 0;
-        for index in function.start + 1..=function.start + comment_lines.len() {
+        if function.takes > 0 {
+            i = 1;
+        }
+        for index in function.start+1..=function.start + comment_lines.len() {
             let content_line = content_lines[index].trim().clone();
             if !content_line.starts_with("//") {
                 let (content_line, is_stop) = is_stop(comment_lines[i].clone());

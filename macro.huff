@@ -1,5 +1,5 @@
 /* Methods */
-#define macro SET_VALUE() = takes (5) returns (0) {
+#define macro SET_VALUE() = takes (3) returns (0) {
     0x06
     calldataload
     [VALUE_LOCATION]
@@ -7,13 +7,13 @@
     0x69
     0x00
     mstore
-    0x00
-    mload
-    // 0x00
+    0x66
     // 0x99
     0x00
     stop
     0x00
+    0x01
+    0x02
 }
 
 /* Methods */
@@ -23,8 +23,6 @@
     0x04
     0x04
 }
-
-
 
 /* Methods */
 #define macro SET_VALUE3() = takes (0) returns (0) {
