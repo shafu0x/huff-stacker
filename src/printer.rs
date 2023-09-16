@@ -68,7 +68,7 @@ impl<'a> Printer<'a> {
         if function.takes > 0 {
             i = 1;
         }
-        for index in function.start+1..=function.start + comment_lines.len() {
+        for index in function.start + 1..=function.start + comment_lines.len() {
             let content_line = content_lines[index].trim().clone();
             if !content_line.starts_with("//") {
                 let (content_line, is_stop) = is_stop(comment_lines[i].clone());

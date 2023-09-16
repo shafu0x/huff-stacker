@@ -37,12 +37,13 @@ fn generate_stack(function: &mut Function) -> Stack {
 /// - A string representing the contents of the macro.
 /// - The line number where the macro definition starts.
 fn parse_function(contents: String, last_start: usize) -> Option<Function> {
-    let mut body = String::new();
-    let mut start = 0; // line number where macro starts
-    let mut in_macro = false;
     let mut function = Function::new();
-
+    let mut body = String::new();
+    let mut start = 0; // line number where function starts
+                       
+    let mut in_macro = false;
     let mut skip = 0;
+
     if last_start > 0 {
         skip = last_start + 1;
     }
@@ -50,9 +51,9 @@ fn parse_function(contents: String, last_start: usize) -> Option<Function> {
     for (line_number, line) in contents.lines().skip(skip).enumerate() {
         // in macro
         if in_macro && !line.trim().starts_with("}") {
-            // add line to body with a new line
-            body.push_str(line);
-            body.push_str("\n");
+            function.body.push_str(line);
+            function.body.push_str("\n");
+            continue;
         }
 
         // start of macro
@@ -61,6 +62,7 @@ fn parse_function(contents: String, last_start: usize) -> Option<Function> {
             function.start = start;
             function.takes = parse_takes(line);
             in_macro = true;
+            continue;
         }
 
         // end of macro
@@ -68,9 +70,8 @@ fn parse_function(contents: String, last_start: usize) -> Option<Function> {
             in_macro = false;
             // if the function takes arguments, we need to insert a placeholder
             if function.takes > 0 {
-                body = format!("{}\n{}", TAKES_PLACEHOLDER, body);
+                function.body = format!("{}\n{}", TAKES_PLACEHOLDER, function.body);
             }
-            function.body = body;
             function.stack = generate_stack(&mut function);
             return Some(function);
         }
@@ -100,7 +101,7 @@ fn parse_line(stack: &mut Stack, line: String, takes: i32) {
     let trimmed_line = line.trim();
 
     match trimmed_line {
-        line if line.starts_with(TAKES_PLACEHOLDER) => stack.push_takes(takes), 
+        line if line.starts_with(TAKES_PLACEHOLDER) => stack.push_takes(takes),
         line if line.starts_with("0x") => stack.push(line.to_string()), // constant
         line if line.starts_with("[") => stack.push(line.to_lowercase()), // reference
         line if line.starts_with("<") => stack.push(line.to_string()),
