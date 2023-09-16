@@ -15,7 +15,8 @@ pub struct Parser {
 fn generate_stack(function: &mut Function) -> Stack {
     let mut stack = Stack::new();
     if function.takes > 0 {
-        function.body = format!("// takes\n{}", function.body);
+        // we are adding a new line to the body
+        function.body = format!("takes\n{}", function.body);
     }
     for line in function.body.lines() {
         parse_line(&mut stack, line.to_string(), function.takes);
@@ -107,7 +108,7 @@ fn parse_line(stack: &mut Stack, line: String, takes: i32) {
         line if line.starts_with("0x") => stack.push(line.to_string()), // constant
         line if line.starts_with("[") => stack.push(line.to_lowercase()), // reference
         line if line.starts_with("<") => stack.push(line.to_string()),
-        line if line.starts_with("// takes") => stack.push_takes(takes), 
+        line if line.starts_with("takes") => stack.push_takes(takes), 
         line if line.starts_with("//") => stack.dup_last(), // comment
         _ => parse_opcode(stack, trimmed_line),
     }
