@@ -37,36 +37,33 @@ fn generate_stack(function: &mut Function) -> Stack {
 /// Optional function
 fn parse_function(contents: String, last_start: usize) -> Option<Function> {
     let mut function = Function::new();
-    let mut body = String::new();
-    let mut start = 0; // line number where function starts
                        
-    let mut in_macro = false;
-    let mut skip = 0;
+    let mut in_function = false;
+    let mut skip = last_start;
 
     if last_start > 0 {
         skip = last_start + 1;
     }
 
     for (line_number, line) in contents.lines().skip(skip).enumerate() {
-        // in macro
-        if in_macro && !line.trim().starts_with("}") {
+        // in function
+        if in_function && !line.trim().starts_with("}") {
             function.body.push_str(line);
             function.body.push_str("\n");
             continue;
         }
 
-        // start of macro
-        if !in_macro && line.trim().starts_with("#define macro") {
-            start = line_number + skip;
-            function.start = start;
+        // start of function
+        if !in_function && line.trim().starts_with("#define macro") {
+            function.start = line_number + skip;
             function.takes = parse_takes(line);
-            in_macro = true;
+            in_function = true;
             continue;
         }
 
-        // end of macro
-        if in_macro && line.trim().starts_with("}") {
-            in_macro = false;
+        // end of function
+        if in_function && line.trim().starts_with("}") {
+            in_function = false;
             // if the function takes arguments, we need to insert a placeholder
             if function.takes > 0 {
                 function.body = format!("{}\n{}", TAKES_PLACEHOLDER, function.body);
@@ -75,7 +72,6 @@ fn parse_function(contents: String, last_start: usize) -> Option<Function> {
             return Some(function);
         }
     }
-
     None::<Function>
 }
 
