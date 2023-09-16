@@ -35,8 +35,20 @@ impl Stack {
             self.values.push(vec![value]);
         } else {
             let mut last_values = self.values.last().unwrap().clone();
+            println!("last_values: {:?}", last_values);
             last_values.push(value);
             self.values.push(last_values);
+        }
+    }
+
+    pub fn push_takes(&mut self, takes: i32) {
+        if takes > 0 {
+            let mut takes_vec = Vec::new();
+            for i in 0..takes {
+                takes_vec.push(format!("a{}", i));
+            }
+            takes_vec.reverse();
+            self.values.push(takes_vec);
         }
     }
 

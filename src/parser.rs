@@ -15,18 +15,10 @@ pub struct Parser {
 fn generate_stack(function: &mut Function) -> Stack {
     let mut stack = Stack::new();
     if function.takes > 0 {
-        let mut takes = Vec::new();
-        for i in 0..function.takes {
-            takes.push(format!("a{}", i));
-        }
-        takes.reverse();
-        stack.values.push(takes);
+        function.body = format!("// takes\n{}", function.body);
     }
     for line in function.body.lines() {
-        parse_line(&mut stack, line.to_string());
-    }
-    if function.takes > 0 {
-        function.body = format!("// takes\n{}", function.body);
+        parse_line(&mut stack, line.to_string(), function.takes);
     }
     stack
 }
@@ -108,13 +100,14 @@ fn get_takes(line: &str) -> i32 {
 /// This function takes a mutable reference to a `Stack` and a `line` as input. It trims the
 /// `line`, checks its content, and pushes the result onto the `Stack` or delegates to `parse_opcode`
 /// for further processing if none of the specific cases match.
-fn parse_line(stack: &mut Stack, line: String) {
+fn parse_line(stack: &mut Stack, line: String, takes: i32) {
     let trimmed_line = line.trim();
 
     match trimmed_line {
         line if line.starts_with("0x") => stack.push(line.to_string()), // constant
         line if line.starts_with("[") => stack.push(line.to_lowercase()), // reference
         line if line.starts_with("<") => stack.push(line.to_string()),
+        line if line.starts_with("// takes") => stack.push_takes(takes), 
         line if line.starts_with("//") => stack.dup_last(), // comment
         _ => parse_opcode(stack, trimmed_line),
     }

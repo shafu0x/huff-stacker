@@ -26,7 +26,6 @@ impl<'a> Printer<'a> {
             final_text.push_str(
                 function.stack.values[i]
                     .iter()
-                    .rev()
                     .map(|v| v.to_string())
                     .collect::<Vec<_>>()
                     .join(", ")

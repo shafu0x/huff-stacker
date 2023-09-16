@@ -368,7 +368,7 @@ pub const MSTORE: Opcode = Opcode {
     pushes: 0,
 };
 pub const MSTORE8: Opcode = Opcode {
-    name: "mstore",
+    name: "mstore8",
     pops: 2,
     pushes: 0,
 };
