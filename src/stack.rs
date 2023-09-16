@@ -47,7 +47,6 @@ impl Stack {
             for i in 0..takes {
                 takes_vec.push(format!("a{}", i));
             }
-            takes_vec.reverse();
             self.values.push(takes_vec);
         }
     }

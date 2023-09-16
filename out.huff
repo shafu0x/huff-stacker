@@ -1,19 +1,19 @@
 /* Methods */
-#define macro SET_VALUE() = takes (0) returns (0) {
-    0x06              // [0x06]
-    calldataload      // [calldataload: 0x06]
-    [VALUE_LOCATION]  // [calldataload: 0x06, [value_location]]
-    sstore            // []
-    0x69              // [0x69]
-    0x00              // [0x69, 0x00]
-    mstore            // []
-    0x00              // [0x00]
-    mload             // [mload: 0x00]
+#define macro SET_VALUE() = takes (3) returns (0) {
+// takes              // [a0, a1, a2]
+    0x06              // [a0, a1, a2, 0x06]
+    calldataload      // [a0, a1, a2, calldataload: 0x06]
+    [VALUE_LOCATION]  // [a0, a1, a2, calldataload: 0x06, [value_location]]
+    sstore            // [a0, a1, a2]
+    0x69              // [a0, a1, a2, 0x69]
+    0x00              // [a0, a1, a2, 0x69, 0x00]
+    mstore            // [a0, a1, a2]
+    0x00              // [a0, a1, a2, 0x00]
     // 0x00
     // 0x99
-    0x00              // [mload: 0x00, 0x00]
-    stop              // [mload: 0x00, 0x00] -- end
-    0x00
+    // 0x99           // [a0, a1, a2, mload: 0x00]
+    0x00              // [a0, a1, a2, mload: 0x00, 0x00]
+    stop              // [a0, a1, a2, mload: 0x00, 0x00] -- end
 }
 
 /* Methods */
