@@ -1,18 +1,18 @@
 /* Methods */
 #define macro SET_VALUE() = takes (5) returns (0) {
 // takes              // [a0, a1, a2, a3, a4]
-    0x06              // [a0, a1, a2, a3, a4]
-    calldataload      // [0x06, a0, a1, a2, a3, a4]
-    [VALUE_LOCATION]  // [calldataload: 0x06, a0, a1, a2, a3, a4]
-    sstore            // [[value_location], calldataload: 0x06, a0, a1, a2, a3, a4]
-    0x69              // [a0, a1, a2, a3, a4]
-    0x00              // [0x69, a0, a1, a2, a3, a4]
-    mstore            // [0x00, 0x69, a0, a1, a2, a3, a4]
-    0x00              // [a0, a1, a2, a3, a4]
+    0x06              // [0x06, a0, a1, a2, a3, a4]
+    calldataload      // [calldataload: 0x06, a0, a1, a2, a3, a4]
+    [VALUE_LOCATION]  // [[value_location], calldataload: 0x06, a0, a1, a2, a3, a4]
+    sstore            // [a0, a1, a2, a3, a4]
+    0x69              // [0x69, a0, a1, a2, a3, a4]
+    0x00              // [0x00, 0x69, a0, a1, a2, a3, a4]
+    mstore            // [a0, a1, a2, a3, a4]
+    0x00              // [0x00, a0, a1, a2, a3, a4]
     // 0x00
     // 0x99
     // 0x99           // [mload: 0x00, a0, a1, a2, a3, a4]
-    0x00              // [mload: 0x00, a0, a1, a2, a3, a4]
+    0x00              // [0x00, mload: 0x00, a0, a1, a2, a3, a4]
     stop              // [0x00, mload: 0x00, a0, a1, a2, a3, a4] -- end
 }
 

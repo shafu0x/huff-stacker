@@ -15,17 +15,18 @@ pub struct Parser {
 fn generate_stack(function: &mut Function) -> Stack {
     let mut stack = Stack::new();
     if function.takes > 0 {
-        // add one new line to the function body
-        function.body = format!("// takes\n{}", function.body);
-        println!("function body: {}", function.body);
         let mut takes = Vec::new();
         for i in 0..function.takes {
             takes.push(format!("a{}", i));
         }
-        stack.push(takes.join(", "));
+        takes.reverse();
+        stack.values.push(takes);
     }
     for line in function.body.lines() {
         parse_line(&mut stack, line.to_string());
+    }
+    if function.takes > 0 {
+        function.body = format!("// takes\n{}", function.body);
     }
     stack
 }
