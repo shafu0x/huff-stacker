@@ -1,8 +1,33 @@
 use crate::opcodes::Opcode;
+use crate::function::Function;
+
+const COMMENT_START: &str = "//";
+const CONSTANT_START: &str = "0x";
+const REFERENCE_START: &str = "[";
+const VARIABLE_START: &str = "<";
+
+// We insert this placeholder into a function if it takes more than 0 arguments.
+// The stack usese this placeholder to determine where to insert the arguments.
+pub const TAKES_PLACEHOLDER: &str = "$takes$";
 
 #[derive(Debug)]
 pub struct Stack {
     pub values: Vec<Vec<String>>,
+}
+
+pub fn generate_stack(function: &mut Function) -> Stack {
+    let mut stack = Stack::new();
+    for line in function.body.lines() {
+        match line.trim() {
+            line if line.starts_with(TAKES_PLACEHOLDER) => stack.push_takes(function.takes),
+            line if line.starts_with(CONSTANT_START) => stack.push(line.to_string()),
+            line if line.starts_with(REFERENCE_START) => stack.push(line.to_lowercase()),
+            line if line.starts_with(VARIABLE_START) => stack.push(line.to_string()),
+            line if line.starts_with(COMMENT_START) => stack.dup_last(),
+            _ => stack.update(Opcode::from_string(line.trim())),
+        }
+    }
+    stack
 }
 
 impl Stack {

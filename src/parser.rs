@@ -5,30 +5,14 @@ use std::io::Read;
 use crate::function::Function;
 use crate::opcodes::*;
 use crate::printer::Printer;
-use crate::stack::Stack;
+use crate::stack::{Stack, generate_stack, TAKES_PLACEHOLDER};
 
 const MACRO_START: &str = "#define macro";
 const MACRO_END: &str = "}";
-const COMMENT_START: &str = "//";
-const CONSTANT_START: &str = "0x";
-const REFERENCE_START: &str = "[";
-const VARIABLE_START: &str = "<";
-
-// We insert this placeholder into a function if it takes more than 0 arguments.
-// The stack usese this placeholder to determine where to insert the arguments.
-const TAKES_PLACEHOLDER: &str = "$takes$";
 
 pub struct Parser {
     functions: Vec<Function>,
     contents: String,
-}
-
-fn generate_stack(function: &mut Function) -> Stack {
-    let mut stack = Stack::new();
-    for line in function.body.lines() {
-        update_stack(&mut stack, line.to_string(), function.takes);
-    }
-    stack
 }
 
 /// Parses a given input string to extract the contents of a macro definition
@@ -89,22 +73,6 @@ fn parse_takes(line: &str) -> i32 {
         }
     }
     0
-}
-
-/// This function takes a mutable reference to a `Stack` and a `line` as input. It trims the
-/// `line`, checks its content, and pushes the result onto the `Stack` or delegates to `parse_opcode`
-/// for further processing if none of the specific cases match.
-fn update_stack(stack: &mut Stack, line: String, takes: i32) {
-    let trimmed_line = line.trim();
-
-    match trimmed_line {
-        line if line.starts_with(TAKES_PLACEHOLDER) => stack.push_takes(takes),
-        line if line.starts_with(CONSTANT_START) => stack.push(line.to_string()), 
-        line if line.starts_with(REFERENCE_START) => stack.push(line.to_lowercase()), 
-        line if line.starts_with(VARIABLE_START) => stack.push(line.to_string()),
-        line if line.starts_with(COMMENT_START) => stack.dup_last(), 
-        _ => stack.update(Opcode::from_string(trimmed_line)),
-    }
 }
 
 impl Parser {
