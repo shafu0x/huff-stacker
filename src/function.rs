@@ -4,7 +4,6 @@ pub struct Function {
     pub start: usize,
     pub body: String,
     pub stack: Stack,
-    pub longest_line: usize,
     pub takes: i32,
 }
 
@@ -14,7 +13,6 @@ impl Function {
             start: 0,
             body: String::new(),
             stack: Stack::new(),
-            longest_line: 0,
             takes: 0,
         }
     }
