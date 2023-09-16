@@ -8,6 +8,7 @@ use crate::printer::Printer;
 use crate::stack::Stack;
 
 const MACRO_START: &str = "#define macro";
+const MACRO_END: &str = "}";
 
 // We insert this placeholder into a function if it takes more than 0 arguments.
 // The stack usese this placeholder to determine where to insert the arguments.
@@ -59,7 +60,7 @@ fn parse_function(contents: String, skip: usize) -> Option<Function> {
         }
 
         // end of function
-        if in_function && line.trim().starts_with("}") {
+        if in_function && line.trim().starts_with(MACRO_END) {
             in_function = false;
             // if the function takes arguments, we need to insert a placeholder
             if function.takes > 0 {
