@@ -35,7 +35,6 @@ impl Stack {
             self.values.push(vec![value]);
         } else {
             let mut last_values = self.values.last().unwrap().clone();
-            println!("last_values: {:?}", last_values);
             last_values.push(value);
             self.values.push(last_values);
         }

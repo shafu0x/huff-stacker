@@ -7,6 +7,8 @@ use crate::opcodes::*;
 use crate::printer::Printer;
 use crate::stack::Stack;
 
+const MACRO_START: &str = "#define macro";
+
 // We insert this placeholder into a function if it takes more than 0 arguments.
 // The stack usese this placeholder to determine where to insert the arguments.
 const TAKES_PLACEHOLDER: &str = "$takes$";
@@ -34,16 +36,11 @@ fn generate_stack(function: &mut Function) -> Stack {
 ///
 /// # Returns
 ///
-/// Optional function
-fn parse_function(contents: String, last_start: usize) -> Option<Function> {
+/// An `Option` containing the parsed `Function` if found, or `None` if no valid
+/// function is present in the `contents`.
+fn parse_function(contents: String, skip: usize) -> Option<Function> {
     let mut function = Function::new();
-                       
     let mut in_function = false;
-    let mut skip = last_start;
-
-    if last_start > 0 {
-        skip = last_start + 1;
-    }
 
     for (line_number, line) in contents.lines().skip(skip).enumerate() {
         // in function
@@ -54,7 +51,7 @@ fn parse_function(contents: String, last_start: usize) -> Option<Function> {
         }
 
         // start of function
-        if !in_function && line.trim().starts_with("#define macro") {
+        if !in_function && line.trim().starts_with(MACRO_START) {
             function.start = line_number + skip;
             function.takes = parse_takes(line);
             in_function = true;
@@ -120,9 +117,13 @@ impl Parser {
             .expect("Error reading file");
         self.contents = contents.clone();
 
-        let mut last_start = 0;
-        while let Some(function) = parse_function(contents.clone(), last_start) {
-            last_start = function.start;
+        let mut skip = 0;
+        while let Some(function) = parse_function(contents.clone(), skip) {
+            skip = function.start;
+            // tbh I don't fully understand why we need this. lol
+            if skip > 0 {
+                skip += 1;
+            }
 
             self.functions.push(function);
         }
