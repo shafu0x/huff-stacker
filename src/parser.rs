@@ -40,9 +40,6 @@ fn parse_function(contents: String, last_start: usize) -> Option<Function> {
     let mut body = String::new();
     let mut start = 0; // line number where macro starts
     let mut in_macro = false;
-
-    let mut found_function = false;
-
     let mut function = Function::new();
 
     let mut skip = 0;
@@ -52,38 +49,34 @@ fn parse_function(contents: String, last_start: usize) -> Option<Function> {
 
     for (line_number, line) in contents.lines().skip(skip).enumerate() {
         // in macro
-        if in_macro && !line.starts_with("}") {
+        if in_macro && !line.trim().starts_with("}") {
+            // add line to body with a new line
             body.push_str(line);
             body.push_str("\n");
         }
 
         // start of macro
-        if line.starts_with("#define macro") {
+        if !in_macro && line.trim().starts_with("#define macro") {
             start = line_number + skip;
             function.start = start;
             function.takes = parse_takes(line);
-            found_function = true;
             in_macro = true;
         }
 
         // end of macro
-        if line.starts_with("}") {
+        if in_macro && line.trim().starts_with("}") {
             in_macro = false;
-            break;
+            // if the function takes arguments, we need to insert a placeholder
+            if function.takes > 0 {
+                body = format!("{}\n{}", TAKES_PLACEHOLDER, body);
+            }
+            function.body = body;
+            function.stack = generate_stack(&mut function);
+            return Some(function);
         }
     }
 
-    if found_function {
-        // if the function takes arguments, we need to insert a placeholder
-        if function.takes > 0 {
-            body = format!("{}\n{}", TAKES_PLACEHOLDER, body);
-        }
-        function.body = body;
-        function.stack = generate_stack(&mut function);
-        Some(function)
-    } else {
-        None::<Function>
-    }
+    None::<Function>
 }
 
 // get the number of arguments a function takes
