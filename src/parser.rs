@@ -14,6 +14,13 @@ pub struct Parser {
 
 fn generate_stack(function: &Function) -> Stack {
     let mut stack = Stack::new();
+    if function.takes > 0 {
+        let mut takes = Vec::new();
+        for i in 0..function.takes {
+            takes.push(format!("a{}", i));
+        }
+        stack.push(takes.join(", "));
+    }
     for line in function.body.lines() {
         parse_line(&mut stack, line.to_string());
     }
