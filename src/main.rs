@@ -3,16 +3,17 @@ mod opcodes;
 mod parser;
 mod printer;
 mod stack;
+mod token;
 
-use parser::Parser;
+use parser::{parse};
 use std::env;
+use printer::{write};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
     let path_in = args[1].to_string();
     let path_out = args[2].to_string();
 
-    let mut parser = Parser::new();
-    parser.parse(&path_in);
-    parser.write(&path_out);
+    let functions = parse(&path_in);
+    write(&path_in, &functions, &path_out);
 }

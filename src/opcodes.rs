@@ -1,4 +1,4 @@
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Eq, Debug, Clone)]
 pub struct Opcode {
     pub name: &'static str,
     pub pops: usize,
@@ -87,7 +87,7 @@ impl Opcode {
             "revert" => REVERT,
             "invalid" => INVALID,
             "selfdestruct" => SELFDESTRUCT,
-            &_ => todo!(),
+            &_ => INVALID,
         }
     }
 }
@@ -485,5 +485,10 @@ pub const INVALID: Opcode = Opcode {
 pub const SELFDESTRUCT: Opcode = Opcode {
     name: "selfdestruct",
     pops: 1,
+    pushes: 0,
+};
+pub const UNKNOWN: Opcode = Opcode {
+    name: "unknown",
+    pops: 0,
     pushes: 0,
 };

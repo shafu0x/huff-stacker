@@ -3,16 +3,17 @@ use std::fs::File;
 use std::io::Read;
 
 use crate::function::Function;
-use crate::opcodes::*;
-use crate::printer::Printer;
-use crate::stack::{Stack, generate_stack, TAKES_PLACEHOLDER};
+use crate::token::{Token, TAKES_PLACEHOLDER};
 
 const MACRO_START: &str = "#define macro";
 const MACRO_END: &str = "}";
 
-pub struct Parser {
-    functions: Vec<Function>,
-    contents: String,
+pub fn parse_line(line: &str) -> Vec<Token> {
+    let mut tokens = Vec::new();
+    for word in line.split_whitespace() {
+        tokens.push(Token::from_string(word));
+    }
+    tokens
 }
 
 /// Parses a given input string to extract the contents of a macro definition
@@ -54,7 +55,7 @@ fn parse_function(contents: String, skip: usize) -> Option<Function> {
             if function.takes > 0 {
                 function.body = format!("{}\n{}", TAKES_PLACEHOLDER, function.body);
             }
-            function.stack = generate_stack(&mut function);
+            function.gen_stack_history();
             return Some(function);
         }
     }
@@ -75,34 +76,22 @@ fn parse_takes(line: &str) -> i32 {
     0
 }
 
-impl Parser {
-    pub fn new() -> Parser {
-        Parser {
-            functions: Vec::new(),
-            contents: String::new(),
+pub fn parse(path: &str) -> Vec<Function> {
+    let mut file = File::open(path).expect("File not found");
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)
+        .expect("Error reading file");
+
+    let mut functions = Vec::new();
+    let mut skip = 0;
+    while let Some(function) = parse_function(contents.clone(), skip) {
+        skip = function.start;
+        // tbh I don't fully understand why we need this. lol
+        if skip > 0 {
+            skip += 1;
         }
+
+        functions.push(function);
     }
-
-    pub fn parse(&mut self, path: &str) {
-        let mut file = File::open(path).expect("File not found");
-        let mut contents = String::new();
-        file.read_to_string(&mut contents)
-            .expect("Error reading file");
-        self.contents = contents.clone();
-
-        let mut skip = 0;
-        while let Some(function) = parse_function(contents.clone(), skip) {
-            skip = function.start;
-            // tbh I don't fully understand why we need this. lol
-            if skip > 0 {
-                skip += 1;
-            }
-
-            self.functions.push(function);
-        }
-    }
-
-    pub fn write(&self, path: &str) {
-        Printer::new(&self.functions).write(self.contents.clone(), path);
-    }
+    functions
 }

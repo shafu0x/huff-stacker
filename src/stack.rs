@@ -1,33 +1,23 @@
-use crate::opcodes::Opcode;
-use crate::function::Function;
-
-const COMMENT_START: &str = "//";
-const CONSTANT_START: &str = "0x";
-const REFERENCE_START: &str = "[";
-const VARIABLE_START: &str = "<";
-
-// We insert this placeholder into a function if it takes more than 0 arguments.
-// The stack usese this placeholder to determine where to insert the arguments.
-pub const TAKES_PLACEHOLDER: &str = "$takes$";
+use crate::token::{Token, TokenType};
 
 #[derive(Debug)]
-pub struct Stack {
-    pub values: Vec<Vec<String>>,
+pub struct StackHistory {
+    pub stacks: Vec<Stack>,
 }
 
-pub fn generate_stack(function: &mut Function) -> Stack {
-    let mut stack = Stack::new();
-    for line in function.body.lines() {
-        match line.trim() {
-            line if line.starts_with(TAKES_PLACEHOLDER) => stack.push_takes(function.takes),
-            line if line.starts_with(CONSTANT_START) => stack.push(line.to_string()),
-            line if line.starts_with(REFERENCE_START) => stack.push(line.to_lowercase()),
-            line if line.starts_with(VARIABLE_START) => stack.push(line.to_string()),
-            line if line.starts_with(COMMENT_START) => stack.dup_last(),
-            _ => stack.update(Opcode::from_string(line.trim())),
-        }
+impl StackHistory {
+    pub fn new() -> StackHistory {
+        StackHistory { stacks: Vec::new() }
     }
-    stack
+
+    pub fn push(&mut self, stack: Stack) {
+        self.stacks.push(stack);
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct Stack {
+    pub values: Vec<Token>,
 }
 
 impl Stack {
@@ -35,69 +25,46 @@ impl Stack {
         Stack { values: Vec::new() }
     }
 
-    pub fn update(&mut self, opcode: Opcode) {
-        if opcode.pops == 1 && opcode.pushes == 1 {
-            let popped = self.peek().unwrap().clone();
-            let result = format!("{}: {}", opcode.name, popped);
-            self.pop_and_push(result);
-            return;
+    pub fn update(&mut self, token: Token) {
+        let opcode = token.opcode.as_ref().unwrap();
+
+        for _ in 0..opcode.pops {
+            self.pop().unwrap();
         }
-        if opcode.pops > 0 {
-            self.pop(opcode.pops);
-        }
-        if opcode.pops == 0 && opcode.pushes == 0 {
-            self.dup_last();
+
+        if opcode.pushes == 1 {
+            self.push(token);
         }
     }
 
-    pub fn dup_last(&mut self) {
-        let last_values = self.values.last().unwrap().clone();
-        self.values.push(last_values);
+    pub fn set_operands(&self, token: &mut Token) {
+        let mut operands = Vec::new();
+        for _ in 0..token.opcode.as_ref().unwrap().pops {
+            operands.push(self.peek().unwrap().clone());
+        }
+        token.operands = operands;
     }
 
-    pub fn push(&mut self, value: String) {
-        if self.values.len() == 0 {
-            self.values.push(vec![value]);
-        } else {
-            let mut last_values = self.values.last().unwrap().clone();
-            last_values.push(value);
-            self.values.push(last_values);
-        }
+    pub fn push(&mut self, value: Token) {
+        self.values.push(value);
+    }
+
+    pub fn pop(&mut self) -> Option<Token> {
+        self.values.pop()
+    }
+
+    pub fn peek(&self) -> Option<&Token> {
+        self.values.last()
     }
 
     pub fn push_takes(&mut self, takes: i32) {
         if takes > 0 {
-            let mut takes_vec = Vec::new();
             for i in 0..takes {
-                takes_vec.push(format!("a{}", i));
+                let mut token = Token::new();
+                token.value = format!("${}", i);
+                token.token_type = TokenType::Constant;
+                self.values.push(token);
             }
-            self.values.push(takes_vec);
         }
-    }
-
-    pub fn pop(&mut self, pops: usize) {
-        if self.values.len() == 0 {
-            return;
-        }
-
-        let mut last_values = self.values.last().unwrap().clone();
-        for _ in 0..pops {
-            last_values.pop();
-        }
-        self.values.push(last_values);
-    }
-
-    pub fn pop_and_push(&mut self, value: String) {
-        if self.values.len() == 0 {
-            return;
-        }
-        let mut last_values = self.values.last().unwrap().clone();
-        last_values.pop();
-        last_values.push(value);
-        self.values.push(last_values);
-    }
-
-    pub fn peek(&self) -> Option<&String> {
-        self.values[self.values.len() - 1].last()
     }
 }
