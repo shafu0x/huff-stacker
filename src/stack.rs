@@ -30,6 +30,9 @@ pub fn generate_stack(function: &mut Function) -> Vec<LocalStack> {
             else if token.token_type == TokenType::Takes_Placeholder {
                 local_stack.push_takes(function.takes);
             }  
+            else if token.token_type == TokenType::Opcode {
+                local_stack.update(token);
+            }
         }
         stack.push(local_stack);
     }
@@ -121,6 +124,16 @@ pub struct LocalStack {
 impl LocalStack {
     pub fn new() -> LocalStack {
         LocalStack { values: Vec::new() }
+    }
+
+    pub fn update(&mut self, token: Token) {
+        let opcode = token.opcode.as_ref().unwrap();
+        for _ in 0..opcode.pops {
+            self.pop();
+        }
+        if opcode.pushes == 1 {
+            self.push(token);
+        }
     }
 
     pub fn push(&mut self, value: Token) {
