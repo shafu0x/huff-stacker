@@ -4,7 +4,7 @@ use std::io::Read;
 
 use crate::function::Function;
 use crate::opcodes::*;
-// use crate::printer::Printer;
+use crate::printer::Printer2;
 use crate::stack::{Stack};
 use crate::token::{Token, TAKES_PLACEHOLDER};
 
@@ -12,8 +12,6 @@ const MACRO_START: &str = "#define macro";
 const MACRO_END: &str = "}";
 
 pub struct Parser {
-    functions: Vec<Function>,
-    contents: String,
 }
 
 pub fn parse_line(line: &str) -> Vec<Token> {
@@ -87,18 +85,16 @@ fn parse_takes(line: &str) -> i32 {
 impl Parser {
     pub fn new() -> Parser {
         Parser {
-            functions: Vec::new(),
-            contents: String::new(),
         }
     }
 
-    pub fn parse(&mut self, path: &str) {
+    pub fn parse(path: &str) -> Vec<Function> {
         let mut file = File::open(path).expect("File not found");
         let mut contents = String::new();
         file.read_to_string(&mut contents)
             .expect("Error reading file");
-        self.contents = contents.clone();
 
+        let mut functions = Vec::new();
         let mut skip = 0;
         while let Some(function) = parse_function(contents.clone(), skip) {
             skip = function.start;
@@ -107,8 +103,9 @@ impl Parser {
                 skip += 1;
             }
 
-            self.functions.push(function);
+            functions.push(function);
         }
+        functions
     }
 
     // pub fn write(&self, path: &str) {
