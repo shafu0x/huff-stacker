@@ -46,13 +46,10 @@ fn merge(function: &Function, content_lines: &mut Vec<String>, comments: String)
     let mut i = 0;
     for index in function.start + 1..=function.start + comment_lines.len() {
         let content_line = content_lines[index].trim().clone();
-        if !content_line.starts_with("//") {
-            let (content_line, is_stop) = is_stop(comment_lines[i].clone());
-            content_lines[index] = content_line;
-
-            if is_stop {
-                break;
-            }
+        let (comment_line, is_stop) = is_stop(comment_lines[i].clone());
+        content_lines[index] = comment_line;
+        if is_stop {
+            break;
         }
         i += 1;
     }
