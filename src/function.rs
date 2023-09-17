@@ -1,6 +1,6 @@
 use crate::parser::parse_line;
 use crate::stack::{Stack, StackHistory};
-use crate::token::{TokenType};
+use crate::token::TokenType;
 
 const COMMENT_START: &str = "//";
 

@@ -5,9 +5,9 @@ mod printer;
 mod stack;
 mod token;
 
-use parser::{parse};
+use parser::parse;
+use printer::write;
 use std::env;
-use printer::{write};
 
 fn main() {
     let args: Vec<String> = env::args().collect();

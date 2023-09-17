@@ -1,6 +1,6 @@
 use std::fs::File;
-use std::io::Write;
 use std::io::Read;
+use std::io::Write;
 
 use crate::function::Function;
 use crate::opcodes::STOP;
@@ -40,11 +40,7 @@ fn create_comments(function: &Function) -> String {
 }
 
 // merge the comments with the original file contents
-fn merge(
-    function: &Function,
-    content_lines: &mut Vec<String>,
-    comments: String,
-) -> Vec<String> {
+fn merge(function: &Function, content_lines: &mut Vec<String>, comments: String) -> Vec<String> {
     let comment_lines: Vec<String> = comments.lines().map(|l| l.to_string()).collect();
 
     let mut i = 0;
