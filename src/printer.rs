@@ -5,14 +5,7 @@ use std::io::Write;
 use crate::function::Function;
 use crate::opcodes::STOP;
 
-fn is_stop(mut line: String) -> (String, bool) {
-    let stop_sign = " -- end";
-    if line.contains(STOP.name) {
-        line.push_str(stop_sign);
-        return (line, true);
-    }
-    return (line, false);
-}
+const END_SIGN: &str = " -- end";
 
 fn create_comments(function: &Function) -> String {
     let mut final_text = String::new();
@@ -46,11 +39,12 @@ fn merge(function: &Function, content_lines: &mut Vec<String>, comments: String)
     let mut i = 0;
     for index in function.start + 1..=function.start + comment_lines.len() {
         let content_line = content_lines[index].trim().clone();
-        let (comment_line, is_stop) = is_stop(comment_lines[i].clone());
-        content_lines[index] = comment_line;
-        if is_stop {
+        let comment_line = &comment_lines[i];
+        content_lines[index] = comment_line.clone();
+        if comment_line.contains(STOP.name) {
+            content_lines[index] += END_SIGN;
             break;
-        }
+        } 
         i += 1;
     }
 
