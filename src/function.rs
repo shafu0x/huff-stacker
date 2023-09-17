@@ -28,7 +28,7 @@ impl Function {
         let mut stack = Stack::new();
         for line in self.body.lines() {
             let tokens = parse_line(line);
-            for token in tokens {
+            for mut token in tokens {
                 if token.token_type == TokenType::Constant {
                     stack.push(token);
                 } 
@@ -42,12 +42,15 @@ impl Function {
                     stack.push_takes(self.takes);
                 }  
                 else if token.token_type == TokenType::Opcode {
+                    // IMPORTANT: We need to set the operands before updating the stack.
+                    stack.set_operands(&mut token);
                     stack.update(token);
                 }
             }
             stack_history.push(stack.clone());
         }
         for stack in stack_history.stacks.iter() {
+            println!("");
             println!("{:?}", stack);
         }
         self.stack_history = stack_history

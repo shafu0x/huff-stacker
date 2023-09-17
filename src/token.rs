@@ -24,6 +24,7 @@ pub struct Token {
     pub value: String,
     pub token_type: TokenType,
     pub opcode: Option<Opcode>, // Only has an opcode if token_type is Opcode
+    pub operands: Vec<Token>,
 }
 
 impl Token {
@@ -32,6 +33,7 @@ impl Token {
             token_type: TokenType::Unknown,
             value: String::new(),
             opcode: Some(UNKNOWN),
+            operands: Vec::new(),
         }
     }
 
