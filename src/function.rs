@@ -1,6 +1,6 @@
 use crate::parser::parse_line;
 use crate::stack::{Stack, StackHistory};
-use crate::token::{Token, TokenType};
+use crate::token::{TokenType};
 
 const COMMENT_START: &str = "//";
 
@@ -39,7 +39,7 @@ impl Function {
                         stack.push(token);
                     } else if token.token_type == TokenType::Variable {
                         stack.push(token);
-                    } else if token.token_type == TokenType::Takes_Placeholder {
+                    } else if token.token_type == TokenType::TakesPlaceholder {
                         stack.push_takes(self.takes);
                     } else if token.token_type == TokenType::Opcode {
                         // IMPORTANT: We need to set the operands before updating the stack.

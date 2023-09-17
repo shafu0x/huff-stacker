@@ -3,15 +3,10 @@ use std::fs::File;
 use std::io::Read;
 
 use crate::function::Function;
-use crate::opcodes::*;
-use crate::printer::Printer2;
-use crate::stack::Stack;
 use crate::token::{Token, TAKES_PLACEHOLDER};
 
 const MACRO_START: &str = "#define macro";
 const MACRO_END: &str = "}";
-
-pub struct Parser {}
 
 pub fn parse_line(line: &str) -> Vec<Token> {
     let mut tokens = Vec::new();
@@ -81,32 +76,22 @@ fn parse_takes(line: &str) -> i32 {
     0
 }
 
-impl Parser {
-    pub fn new() -> Parser {
-        Parser {}
-    }
+pub fn parse(path: &str) -> Vec<Function> {
+    let mut file = File::open(path).expect("File not found");
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)
+        .expect("Error reading file");
 
-    pub fn parse(path: &str) -> Vec<Function> {
-        let mut file = File::open(path).expect("File not found");
-        let mut contents = String::new();
-        file.read_to_string(&mut contents)
-            .expect("Error reading file");
-
-        let mut functions = Vec::new();
-        let mut skip = 0;
-        while let Some(function) = parse_function(contents.clone(), skip) {
-            skip = function.start;
-            // tbh I don't fully understand why we need this. lol
-            if skip > 0 {
-                skip += 1;
-            }
-
-            functions.push(function);
+    let mut functions = Vec::new();
+    let mut skip = 0;
+    while let Some(function) = parse_function(contents.clone(), skip) {
+        skip = function.start;
+        // tbh I don't fully understand why we need this. lol
+        if skip > 0 {
+            skip += 1;
         }
-        functions
-    }
 
-    // pub fn write(&self, path: &str) {
-    //     Printer::new(&self.functions).write(self.contents.clone(), path);
-    // }
+        functions.push(function);
+    }
+    functions
 }

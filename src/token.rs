@@ -12,7 +12,7 @@ pub const TAKES_PLACEHOLDER: &str = "$takes$";
 pub enum TokenType {
     Constant,
     Opcode,
-    Takes_Placeholder,
+    TakesPlaceholder,
     Reference,
     Variable,
     Unknown,
@@ -43,7 +43,7 @@ impl Token {
             _ if word.starts_with(CONSTANT_START) => TokenType::Constant,
             _ if word.starts_with(REFERENCE_START) => TokenType::Reference,
             _ if word.starts_with(VARIABLE_START) => TokenType::Variable,
-            TAKES_PLACEHOLDER => TokenType::Takes_Placeholder,
+            TAKES_PLACEHOLDER => TokenType::TakesPlaceholder,
             _ => TokenType::Opcode,
         };
 
