@@ -15,6 +15,22 @@ pub struct Parser {
     contents: String,
 }
 
+fn parse_line(line: &str) -> Vec<Opcode> {
+    let mut opcodes = Vec::new();
+    for word in line.split_whitespace() {
+        if let Some(opcode) = Opcode::from_string(word) {
+            opcodes.push(opcode);
+        } else if word.starts_with("0x") {
+            opcodes.push(Opcode::from_string("placeholder").unwrap());
+        } else if let Ok(_) = word.parse::<i32>() {
+            opcodes.push(Opcode::from_string("placeholder").unwrap());
+        }
+    }
+    let opcode = Opcode::from_string("stop");
+    opcodes.push(opcode);
+    opcodes
+}
+
 /// Parses a given input string to extract the contents of a macro definition
 /// and determine the line number where the macro definition starts.
 ///

@@ -1,34 +1,8 @@
 
 
 /* Methods */
-#define macro SET_VALUE() = takes (3) returns (0) {
-    0x06
-    calldataload
-    [VALUE_LOCATION]
-    sstore
-    0x69
-    0x00
-    mstore
-    0x66
-    // 0x99
-    0x00
-    stop
-    0x00
-    0x01
-    0x02
+#define macro SET_VALUE() = takes (0) returns (0) {
+    0x06 
+    0x06 0x06 0x99 mload
 }
 
-/* Methods */
-#define macro SET_VALUE2() = takes (0) returns (0) {
-    0x04
-    0x04
-    0x04
-    0x04
-}
-
-/* Methods */
-#define macro SET_VALUE3() = takes (0) returns (0) {
-    0x07
-    0x04
-    0x04
-}
