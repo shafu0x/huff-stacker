@@ -44,7 +44,7 @@ fn merge(function: &Function, content_lines: &mut Vec<String>, comments: String)
         if comment_line.contains(STOP.name) {
             content_lines[index] += END_SIGN;
             break;
-        } 
+        }
         i += 1;
     }
 
