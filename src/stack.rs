@@ -1,5 +1,7 @@
 use crate::opcodes::Opcode;
 use crate::function::Function;
+use crate::parser::{parse_line};
+use crate::token::{TokenType};
 
 const COMMENT_START: &str = "//";
 const CONSTANT_START: &str = "0x";
@@ -10,24 +12,33 @@ const VARIABLE_START: &str = "<";
 // The stack usese this placeholder to determine where to insert the arguments.
 pub const TAKES_PLACEHOLDER: &str = "$takes$";
 
+pub fn generate_stack(function: &mut Function) -> Vec<Vec<String>> {
+    let mut stack = Vec::<Vec<String>>::new();
+    for line in function.body.lines() {
+        let tokens = parse_line(line);
+        let mut local_stack = Vec::new();
+        for token in tokens {
+            if token.token_type == TokenType::Constant {
+                local_stack.push(token.value);
+            } 
+            else if token.token_type == TokenType::Reference {
+                local_stack.push(token.value);
+            } 
+            else if token.token_type == TokenType::Variable {
+                local_stack.push(token.value);
+            } 
+            else if token.token_type == TokenType::Takes_Placeholder {
+                local_stack.push(token.value);
+            }  
+        }
+        stack.push(local_stack);
+    }
+    stack
+}
+
 #[derive(Debug)]
 pub struct Stack {
     pub values: Vec<Vec<String>>,
-}
-
-pub fn generate_stack(function: &mut Function) -> Stack {
-    let mut stack = Stack::new();
-    for line in function.body.lines() {
-        match line.trim() {
-            line if line.starts_with(TAKES_PLACEHOLDER) => stack.push_takes(function.takes),
-            line if line.starts_with(CONSTANT_START) => stack.push(line.to_string()),
-            line if line.starts_with(REFERENCE_START) => stack.push(line.to_lowercase()),
-            line if line.starts_with(VARIABLE_START) => stack.push(line.to_string()),
-            line if line.starts_with(COMMENT_START) => stack.dup_last(),
-            _ => stack.update(Opcode::from_string(line.trim())),
-        }
-    }
-    stack
 }
 
 impl Stack {

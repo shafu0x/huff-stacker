@@ -16,13 +16,11 @@ pub struct Parser {
     contents: String,
 }
 
-fn parse_line(line: &str) -> Vec<Token> {
-    println!("");
+pub fn parse_line(line: &str) -> Vec<Token> {
     let mut tokens = Vec::new();
     for word in line.split_whitespace() {
         tokens.push(Token::from_string(word));
     }
-    println!("tokens: {:?}", tokens);
     tokens
 }
 
@@ -67,7 +65,7 @@ fn parse_function(contents: String, skip: usize) -> Option<Function> {
             if function.takes > 0 {
                 function.body = format!("{}\n{}", TAKES_PLACEHOLDER, function.body);
             }
-            function.stack = generate_stack(&mut function);
+            function.stack.values = generate_stack(&mut function);
             return Some(function);
         }
     }
