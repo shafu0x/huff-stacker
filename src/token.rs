@@ -1,6 +1,5 @@
 use crate::opcodes::{Opcode, UNKNOWN};
 
-const COMMENT_START: &str = "//";
 const CONSTANT_START: &str = "0x";
 const REFERENCE_START: &str = "[";
 const VARIABLE_START: &str = "<";
