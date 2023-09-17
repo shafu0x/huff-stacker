@@ -38,15 +38,20 @@ fn merge(function: &Function, content_lines: &mut Vec<String>, comments: String)
 
     let mut i = 0;
     for index in function.start + 1..=function.start + comment_lines.len() {
-        let content_line = content_lines[index].trim().clone();
-        let comment_line = &comment_lines[i];
-        content_lines[index] = comment_line.clone();
-        if comment_line.contains(STOP.name) {
-            content_lines[index] += END_SIGN;
-            break;
+        let content_line = content_lines.get_mut(index);
+        
+        if let Some(content_line) = content_line {
+            let comment_line = &comment_lines[i];
+            *content_line = comment_line.clone();
+
+            if comment_line.contains(STOP.name) {
+                content_line.push_str(END_SIGN);
+                break;
+            }
         }
-        i += 1;
-    }
+
+    i += 1;
+}
 
     content_lines.to_vec()
 }
