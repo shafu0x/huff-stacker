@@ -5,9 +5,9 @@ use crate::token::{Token, TokenType};
 const COMMENT_START: &str = "//";
 
 pub struct Function {
-    pub start: usize,
-    pub takes: i32,
-    pub body: String,
+    pub start: usize, // The line number where the function starts
+    pub takes: i32,   // The number of arguments the function takes
+    pub body: String, // The body of the function
     pub stack_history: StackHistory,
 }
 
@@ -52,10 +52,6 @@ impl Function {
                 }
             } 
             stack_history.push(stack.clone());
-        }
-        for stack in stack_history.stacks.iter() {
-            println!("");
-            println!("{:?}", stack);
         }
         self.stack_history = stack_history
     }
