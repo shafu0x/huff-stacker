@@ -5,14 +5,13 @@ use std::io::Read;
 use crate::function::Function;
 use crate::opcodes::*;
 use crate::printer::Printer2;
-use crate::stack::{Stack};
+use crate::stack::Stack;
 use crate::token::{Token, TAKES_PLACEHOLDER};
 
 const MACRO_START: &str = "#define macro";
 const MACRO_END: &str = "}";
 
-pub struct Parser {
-}
+pub struct Parser {}
 
 pub fn parse_line(line: &str) -> Vec<Token> {
     let mut tokens = Vec::new();
@@ -84,8 +83,7 @@ fn parse_takes(line: &str) -> i32 {
 
 impl Parser {
     pub fn new() -> Parser {
-        Parser {
-        }
+        Parser {}
     }
 
     pub fn parse(path: &str) -> Vec<Function> {

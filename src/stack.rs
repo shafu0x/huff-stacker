@@ -1,6 +1,6 @@
-use crate::opcodes::Opcode;
 use crate::function::Function;
-use crate::parser::{parse_line};
+use crate::opcodes::Opcode;
+use crate::parser::parse_line;
 use crate::token::{Token, TokenType};
 
 #[derive(Debug)]

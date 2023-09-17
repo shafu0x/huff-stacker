@@ -10,10 +10,10 @@ pub const TAKES_PLACEHOLDER: &str = "$takes$";
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum TokenType {
-    Constant, 
+    Constant,
     Opcode,
     Takes_Placeholder,
-    Reference, 
+    Reference,
     Variable,
     Unknown,
 }
@@ -46,7 +46,7 @@ impl Token {
             TAKES_PLACEHOLDER => TokenType::Takes_Placeholder,
             _ => TokenType::Opcode,
         };
-        
+
         token.token_type = token_type;
         token.value = word.to_string();
 
@@ -55,5 +55,21 @@ impl Token {
         }
 
         token
+    }
+
+    pub fn to_str(&self) -> String {
+        if self.token_type != TokenType::Opcode {
+            return self.value.clone();
+        } else {
+            return format!(
+                "{}: {}",
+                self.opcode.as_ref().unwrap().name,
+                self.operands
+                    .iter()
+                    .map(|operand| operand.to_str())
+                    .collect::<Vec<String>>()
+                    .join(" ")
+            );
+        }
     }
 }

@@ -94,12 +94,36 @@ fn is_stop(mut line: String) -> (String, bool) {
     return (line, false);
 }
 
-pub struct Printer2 {
-}
+pub struct Printer2 {}
 
 impl Printer2 {
+    pub fn create_comments(function: &Function) -> String {
+        let mut final_text = String::new();
+        for (i, line) in function.body.lines().enumerate() {
+            let final_len = function.longest_line() - line.len() + 1;
+            final_text.push_str(line);
+            for _ in 0..final_len {
+                final_text.push_str(" ");
+            }
+            final_text.push_str(" // ");
+            final_text.push_str("[");
+            final_text.push_str(
+                function.stack_history.stacks[i]
+                    .values
+                    .iter()
+                    .map(|token| token.to_str())
+                    .collect::<Vec<_>>()
+                    .join(", ")
+                    .as_str(),
+            );
+            final_text.push_str("]");
+            final_text.push_str("\n");
+        }
+        println!("{}", final_text);
+        final_text
+    }
 
     pub fn write(path_in: &str, functions: &Vec<Function>, path_out: &str) {
-
+        let comments = Printer2::create_comments(&functions[0]);
     }
 }
