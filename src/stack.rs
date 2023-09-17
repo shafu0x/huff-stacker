@@ -62,8 +62,9 @@ impl Stack {
 
     pub fn push_takes(&mut self, takes: i32) {
         if takes > 0 {
-            for _ in 0..takes {
+            for i in 0..takes {
                 let mut token = Token::new();
+                token.value = format!("${}", i);
                 token.token_type = TokenType::Constant;
                 self.values.push(token);
             }
