@@ -65,7 +65,7 @@ fn parse_function(contents: String, skip: usize) -> Option<Function> {
             if function.takes > 0 {
                 function.body = format!("{}\n{}", TAKES_PLACEHOLDER, function.body);
             }
-            function.stack.values = generate_stack(&mut function);
+            // function.stack.values = generate_stack(&mut function);
             return Some(function);
         }
     }

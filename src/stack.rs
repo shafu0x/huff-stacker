@@ -1,7 +1,7 @@
 use crate::opcodes::Opcode;
 use crate::function::Function;
 use crate::parser::{parse_line};
-use crate::token::{TokenType};
+use crate::token::{Token, TokenType};
 
 const COMMENT_START: &str = "//";
 const CONSTANT_START: &str = "0x";
@@ -12,23 +12,23 @@ const VARIABLE_START: &str = "<";
 // The stack usese this placeholder to determine where to insert the arguments.
 pub const TAKES_PLACEHOLDER: &str = "$takes$";
 
-pub fn generate_stack(function: &mut Function) -> Vec<Vec<String>> {
-    let mut stack = Vec::<Vec<String>>::new();
+pub fn generate_stack(function: &mut Function) -> Vec<LocalStack> {
+    let mut stack = Vec::<LocalStack>::new();
     for line in function.body.lines() {
         let tokens = parse_line(line);
-        let mut local_stack = Vec::new();
+        let mut local_stack = LocalStack::new();
         for token in tokens {
             if token.token_type == TokenType::Constant {
-                local_stack.push(token.value);
+                local_stack.push(token);
             } 
             else if token.token_type == TokenType::Reference {
-                local_stack.push(token.value);
+                local_stack.push(token);
             } 
             else if token.token_type == TokenType::Variable {
-                local_stack.push(token.value);
+                local_stack.push(token);
             } 
             else if token.token_type == TokenType::Takes_Placeholder {
-                local_stack.push(token.value);
+                local_stack.push_takes(function.takes);
             }  
         }
         stack.push(local_stack);
@@ -110,5 +110,38 @@ impl Stack {
 
     pub fn peek(&self) -> Option<&String> {
         self.values[self.values.len() - 1].last()
+    }
+}
+
+#[derive(Debug)]
+pub struct LocalStack {
+    pub values: Vec<Token>,
+}
+
+impl LocalStack {
+    pub fn new() -> LocalStack {
+        LocalStack { values: Vec::new() }
+    }
+
+    pub fn push(&mut self, value: Token) {
+        self.values.push(value);
+    }
+
+    pub fn pop(&mut self) -> Option<Token> {
+        self.values.pop()
+    }
+
+    pub fn peek(&self) -> Option<&Token> {
+        self.values.last()
+    }
+
+    pub fn push_takes(&mut self, takes: i32) {
+        if takes > 0 {
+            for i in 0..takes {
+                let mut token = Token::new();
+                token.token_type = TokenType::Constant;
+                self.values.push(token);
+            }
+        }
     }
 }
