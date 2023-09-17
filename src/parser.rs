@@ -5,8 +5,8 @@ use std::io::Read;
 use crate::function::Function;
 use crate::opcodes::*;
 // use crate::printer::Printer;
-use crate::stack::{Stack, TAKES_PLACEHOLDER};
-use crate::token::Token;
+use crate::stack::{Stack};
+use crate::token::{Token, TAKES_PLACEHOLDER};
 
 const MACRO_START: &str = "#define macro";
 const MACRO_END: &str = "}";

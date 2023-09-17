@@ -4,18 +4,18 @@ use crate::token::{Token, TokenType};
 
 pub struct Function {
     pub start: usize,
+    pub takes: i32,
     pub body: String,
     pub stack_history: StackHistory,
-    pub takes: i32,
 }
 
 impl Function {
     pub fn new() -> Function {
         Function {
             start: 0,
+            takes: 0,
             body: String::new(),
             stack_history: StackHistory::new(),
-            takes: 0,
         }
     }
 
