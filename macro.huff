@@ -17,7 +17,7 @@
 }
 
 /* Methods */
-#define macro SET_VALUE2() = takes (0) returns (0) {
+#define macro SET_VALUE2() = takes (5) returns (0) {
     0x04
     0x04
     0x04

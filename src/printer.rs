@@ -44,9 +44,6 @@ fn merge(function: &Function, content_lines: &mut Vec<String>, comments: String)
     let comment_lines: Vec<String> = comments.lines().map(|l| l.to_string()).collect();
 
     let mut i = 0;
-    if function.takes > 0 {
-        i = 1;
-    }
     for index in function.start + 1..=function.start + comment_lines.len() {
         let content_line = content_lines[index].trim().clone();
         if !content_line.starts_with("//") {
@@ -71,7 +68,7 @@ pub fn write(path_in: &str, functions: &Vec<Function>, path_out: &str) {
     let mut content_lines: Vec<String> = contents.lines().map(|l| l.to_string()).collect();
     for function in functions {
         let comments = create_comments(function);
-        content_lines = merge(function, &mut content_lines, comments) // refactor clone
+        content_lines = merge(function, &mut content_lines, comments);
     }
 
     let mut final_text = String::new();
