@@ -1,5 +1,5 @@
 #!/bin/bash
-cargo run /Users/shafu/huff-stack-generator/macro.huff /Users/shafu/huff-stack-generator/out.huff
+cargo run /home/shafu/huff-stack-generator/macro.huff /home/shafu/huff-stack-generator/out.huff
 
 if [ $? -eq 0 ]; then
   cat out.huff

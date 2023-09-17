@@ -3,6 +3,7 @@ mod opcodes;
 mod parser;
 mod printer;
 mod stack;
+mod token;
 
 use parser::Parser;
 use std::env;

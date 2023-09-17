@@ -6,6 +6,7 @@ use crate::function::Function;
 use crate::opcodes::*;
 use crate::printer::Printer;
 use crate::stack::{Stack, generate_stack, TAKES_PLACEHOLDER};
+use crate::token::Token;
 
 const MACRO_START: &str = "#define macro";
 const MACRO_END: &str = "}";
@@ -15,20 +16,14 @@ pub struct Parser {
     contents: String,
 }
 
-fn parse_line(line: &str) -> Vec<Opcode> {
-    let mut opcodes = Vec::new();
+fn parse_line(line: &str) -> Vec<Token> {
+    println!("");
+    let mut tokens = Vec::new();
     for word in line.split_whitespace() {
-        if let Some(opcode) = Opcode::from_string(word) {
-            opcodes.push(opcode);
-        } else if word.starts_with("0x") {
-            opcodes.push(Opcode::from_string("placeholder").unwrap());
-        } else if let Ok(_) = word.parse::<i32>() {
-            opcodes.push(Opcode::from_string("placeholder").unwrap());
-        }
+        tokens.push(Token::from_string(word));
     }
-    let opcode = Opcode::from_string("stop");
-    opcodes.push(opcode);
-    opcodes
+    println!("tokens: {:?}", tokens);
+    tokens
 }
 
 /// Parses a given input string to extract the contents of a macro definition
@@ -46,6 +41,8 @@ fn parse_line(line: &str) -> Vec<Opcode> {
 fn parse_function(contents: String, skip: usize) -> Option<Function> {
     let mut function = Function::new();
     let mut in_function = false;
+
+    parse_line("0x60 $takes$ [VALUE] <z80> add");
 
     for (line_number, line) in contents.lines().skip(skip).enumerate() {
         // in function
