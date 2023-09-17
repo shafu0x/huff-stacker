@@ -4,8 +4,8 @@ use std::io::Read;
 
 use crate::function::Function;
 use crate::opcodes::*;
-use crate::printer::Printer;
-use crate::stack::{Stack, generate_stack, TAKES_PLACEHOLDER};
+// use crate::printer::Printer;
+use crate::stack::{Stack, TAKES_PLACEHOLDER};
 use crate::token::Token;
 
 const MACRO_START: &str = "#define macro";
@@ -40,8 +40,6 @@ fn parse_function(contents: String, skip: usize) -> Option<Function> {
     let mut function = Function::new();
     let mut in_function = false;
 
-    parse_line("0x60 $takes$ [VALUE] <z80> add");
-
     for (line_number, line) in contents.lines().skip(skip).enumerate() {
         // in function
         if in_function && !line.trim().starts_with("}") {
@@ -65,7 +63,7 @@ fn parse_function(contents: String, skip: usize) -> Option<Function> {
             if function.takes > 0 {
                 function.body = format!("{}\n{}", TAKES_PLACEHOLDER, function.body);
             }
-            // function.stack.values = generate_stack(&mut function);
+            function.gen_stack_history();
             return Some(function);
         }
     }
@@ -113,7 +111,7 @@ impl Parser {
         }
     }
 
-    pub fn write(&self, path: &str) {
-        Printer::new(&self.functions).write(self.contents.clone(), path);
-    }
+    // pub fn write(&self, path: &str) {
+    //     Printer::new(&self.functions).write(self.contents.clone(), path);
+    // }
 }

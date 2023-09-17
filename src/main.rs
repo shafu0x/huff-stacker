@@ -1,7 +1,7 @@
 mod function;
 mod opcodes;
 mod parser;
-mod printer;
+// mod printer;
 mod stack;
 mod token;
 
@@ -15,5 +15,5 @@ fn main() {
 
     let mut parser = Parser::new();
     parser.parse(&path_in);
-    parser.write(&path_out);
+    // parser.write(&path_out);
 }

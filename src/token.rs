@@ -1,6 +1,6 @@
 use crate::opcodes::{Opcode, UNKNOWN};
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum TokenType {
     Constant, 
     Opcode,
@@ -10,7 +10,7 @@ pub enum TokenType {
     Unknown,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Token {
     pub value: String,
     pub token_type: TokenType,
