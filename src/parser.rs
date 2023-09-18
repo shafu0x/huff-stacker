@@ -3,7 +3,7 @@ use std::fs::File;
 use std::io::Read;
 
 use crate::function::Function;
-use crate::token::{Token, TAKES_PLACEHOLDER};
+use crate::token::{Token};
 
 const MACRO_START: &str = "#define macro";
 const MACRO_END: &str = "}";
@@ -51,10 +51,6 @@ fn parse_function(contents: String, skip: usize) -> Option<Function> {
         // end of function
         if in_function && line.trim().starts_with(MACRO_END) {
             in_function = false;
-            // if the function takes arguments, we need to insert a placeholder
-            if function.takes > 0 {
-                function.body = format!("{}\n{}", TAKES_PLACEHOLDER, function.body);
-            }
             function.gen_stack_history();
             return Some(function);
         }
