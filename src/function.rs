@@ -28,6 +28,7 @@ impl Function {
     pub fn gen_stack_history(&mut self) {
         let mut stack_history = StackHistory::new();
         let mut stack = Stack::new();
+        stack.push_takes(self.takes);
         for line in self.body.lines() {
             if !line.trim().starts_with(COMMENT_START) {
                 // if not comment
@@ -39,8 +40,6 @@ impl Function {
                         stack.push(token);
                     } else if token.token_type == TokenType::Variable {
                         stack.push(token);
-                    } else if token.token_type == TokenType::TakesPlaceholder {
-                        stack.push_takes(self.takes);
                     } else if token.token_type == TokenType::Opcode {
                         // IMPORTANT: We need to set the operands before updating the stack.
                         stack.set_operands(&mut token);

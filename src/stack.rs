@@ -25,6 +25,17 @@ impl Stack {
         Stack { values: Vec::new() }
     }
 
+    pub fn push_takes(&mut self, takes: i32) {
+        if takes > 0 {
+            for i in 0..takes {
+                let mut token = Token::new();
+                token.value = format!("${}", i);
+                token.token_type = TokenType::Constant;
+                self.push(token);
+            }
+        }
+    }
+
     pub fn update(&mut self, token: Token) {
         let opcode = token.opcode.as_ref().unwrap();
 
@@ -55,16 +66,5 @@ impl Stack {
 
     pub fn peek(&self) -> Option<&Token> {
         self.values.last()
-    }
-
-    pub fn push_takes(&mut self, takes: i32) {
-        if takes > 0 {
-            for i in 0..takes {
-                let mut token = Token::new();
-                token.value = format!("${}", i);
-                token.token_type = TokenType::Constant;
-                self.values.push(token);
-            }
-        }
     }
 }

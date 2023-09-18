@@ -4,15 +4,10 @@ const CONSTANT_START: &str = "0x";
 const REFERENCE_START: &str = "[";
 const VARIABLE_START: &str = "<";
 
-// We insert this placeholder into a function if it takes more than 0 arguments.
-// The stack usese this placeholder to determine where to insert the arguments.
-pub const TAKES_PLACEHOLDER: &str = "$takes$";
-
 #[derive(Debug, PartialEq, Clone)]
 pub enum TokenType {
     Constant,
     Opcode,
-    TakesPlaceholder,
     Reference,
     Variable,
     Unknown,
@@ -43,7 +38,6 @@ impl Token {
             _ if word.starts_with(CONSTANT_START) => TokenType::Constant,
             _ if word.starts_with(REFERENCE_START) => TokenType::Reference,
             _ if word.starts_with(VARIABLE_START) => TokenType::Variable,
-            TAKES_PLACEHOLDER => TokenType::TakesPlaceholder,
             _ => TokenType::Opcode,
         };
 
