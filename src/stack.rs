@@ -1,4 +1,4 @@
-use crate::token::{TokenType, Token};
+use crate::token::{Token, TokenType};
 
 #[derive(Debug)]
 pub struct StackHistory {
@@ -25,7 +25,7 @@ impl Stack {
         Stack { values: Vec::new() }
     }
 
-    pub fn init(&mut self, takes: i32) {
+    pub fn set_takes(&mut self, takes: i32) {
         if takes > 0 {
             for i in 0..takes {
                 let mut token = Token::new();
