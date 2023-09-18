@@ -1,5 +1,5 @@
 use crate::opcodes::{Opcode, UNKNOWN};
-use crate::stack::{Stack};
+use crate::stack::Stack;
 
 const CONSTANT_START: &str = "0x";
 const REFERENCE_START: &str = "[";
