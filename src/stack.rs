@@ -48,14 +48,6 @@ impl Stack {
         }
     }
 
-    pub fn set_operands(&self, token: &mut Token) {
-        let mut operands = Vec::new();
-        for _ in 0..token.opcode.as_ref().unwrap().pops {
-            operands.push(self.peek().unwrap().clone());
-        }
-        token.operands = operands;
-    }
-
     pub fn push(&mut self, value: Token) {
         self.values.push(value);
     }
