@@ -42,7 +42,7 @@ impl Function {
                         stack.push(token);
                     } else if token.token_type == TokenType::Opcode {
                         // IMPORTANT: We need to set the operands before updating the stack.
-                        stack.set_operands(&mut token);
+                        token.set_operands(&stack);
                         stack.update(token);
                     }
                 }

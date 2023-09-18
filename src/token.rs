@@ -1,4 +1,5 @@
 use crate::opcodes::{Opcode, UNKNOWN};
+use crate::stack::{Stack};
 
 const CONSTANT_START: &str = "0x";
 const REFERENCE_START: &str = "[";
@@ -49,6 +50,14 @@ impl Token {
         }
 
         token
+    }
+
+    pub fn set_operands(&mut self, stack: &Stack) {
+        let mut operands = Vec::new();
+        for _ in 0..self.opcode.as_ref().unwrap().pops {
+            operands.push(stack.peek().unwrap().clone());
+        }
+        self.operands = operands;
     }
 
     pub fn to_str(&self) -> String {
