@@ -1,4 +1,4 @@
-use crate::token::{Token, TokenType};
+use crate::token::{TokenType, Token};
 
 #[derive(Debug)]
 pub struct StackHistory {
@@ -23,6 +23,17 @@ pub struct Stack {
 impl Stack {
     pub fn new() -> Stack {
         Stack { values: Vec::new() }
+    }
+
+    pub fn init(&mut self, takes: i32) {
+        if takes > 0 {
+            for i in 0..takes {
+                let mut token = Token::new();
+                token.value = format!("${}", i);
+                token.token_type = TokenType::Constant;
+                self.push(token);
+            }
+        }
     }
 
     pub fn update(&mut self, token: Token) {
@@ -55,16 +66,5 @@ impl Stack {
 
     pub fn peek(&self) -> Option<&Token> {
         self.values.last()
-    }
-
-    pub fn push_takes(&mut self, takes: i32) {
-        if takes > 0 {
-            for i in 0..takes {
-                let mut token = Token::new();
-                token.value = format!("${}", i);
-                token.token_type = TokenType::Constant;
-                self.values.push(token);
-            }
-        }
     }
 }

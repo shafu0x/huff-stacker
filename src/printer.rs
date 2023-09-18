@@ -38,9 +38,9 @@ fn merge(function: &Function, content_lines: &mut Vec<String>, comments: String)
     let comment_lines: Vec<String> = comments.lines().map(|l| l.to_string()).collect();
 
     let mut i = 0;
-    for index in function.start+1..=function.start + comment_lines.len() {
+    for index in function.start + 1..=function.start + comment_lines.len() {
         let content_line = content_lines.get_mut(index);
-        
+
         if let Some(content_line) = content_line {
             let comment_line = &comment_lines[i];
             if !content_line.trim().starts_with(COMMENT_START) {
@@ -52,8 +52,8 @@ fn merge(function: &Function, content_lines: &mut Vec<String>, comments: String)
             }
         }
 
-    i += 1;
-}
+        i += 1;
+    }
 
     content_lines.to_vec()
 }

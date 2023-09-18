@@ -1,6 +1,6 @@
 use crate::parser::parse_line;
 use crate::stack::{Stack, StackHistory};
-use crate::token::TokenType;
+use crate::token::{TokenType, Token};
 
 const COMMENT_START: &str = "//";
 
@@ -28,6 +28,7 @@ impl Function {
     pub fn gen_stack_history(&mut self) {
         let mut stack_history = StackHistory::new();
         let mut stack = Stack::new();
+        stack.init(self.takes);
         for line in self.body.lines() {
             if !line.trim().starts_with(COMMENT_START) {
                 // if not comment

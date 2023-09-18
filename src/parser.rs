@@ -3,7 +3,7 @@ use std::fs::File;
 use std::io::Read;
 
 use crate::function::Function;
-use crate::token::{Token};
+use crate::token::Token;
 
 const MACRO_START: &str = "#define macro";
 const MACRO_END: &str = "}";
