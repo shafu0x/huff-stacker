@@ -25,7 +25,7 @@ impl Stack {
         Stack { values: Vec::new() }
     }
 
-    pub fn set_takes(&mut self, takes: i32) {
+    pub fn push_takes(&mut self, takes: i32) {
         if takes > 0 {
             for i in 0..takes {
                 let mut token = Token::new();
