@@ -6,6 +6,7 @@ const COMMENT_START: &str = "//";
 
 pub struct Function {
     pub start: usize, // The line number where the function starts
+    pub end: usize,   // The line number where the function ends
     pub takes: i32,   // The number of arguments the function takes
     pub body: String, // The body of the function
     pub stack_history: StackHistory,
@@ -15,6 +16,7 @@ impl Function {
     pub fn new() -> Function {
         Function {
             start: 0,
+            end: 0,
             takes: 0,
             body: String::new(),
             stack_history: StackHistory::new(),

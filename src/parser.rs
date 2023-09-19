@@ -34,24 +34,25 @@ fn parse_function(contents: &str, skip: usize) -> Option<Function> {
 
     for (line_number, line) in contents.lines().skip(skip).enumerate() {
         // start of function
-        if !in_function && line.trim().starts_with(MACRO_START) {
+        if line.trim().starts_with(MACRO_START) {
             function.start = line_number + skip;
             function.takes = parse_takes(line);
             in_function = true;
             continue;
         }
 
-        // inside function
-        if in_function && !line.trim().starts_with("}") {
-            function.body.push_str(&format!("{}\n", line));
-            continue;
+        // end of function
+        if line.trim().starts_with(MACRO_END) {
+            function.end = line_number + skip;
+            function.gen_stack_history();
+            in_function = false;
+            return Some(function);
         }
 
-        // end of function
-        if in_function && line.trim().starts_with(MACRO_END) {
-            in_function = false;
-            function.gen_stack_history();
-            return Some(function);
+        // inside function
+        if in_function {
+            function.body.push_str(&format!("{}\n", line));
+            continue;
         }
     }
     None::<Function>
@@ -80,7 +81,7 @@ pub fn parse(path: &str) -> Vec<Function> {
     let mut functions = Vec::new();
     let mut skip = 0;
     while let Some(function) = parse_function(&contents, skip) {
-        skip = function.start+1;
+        skip = function.end + 1;
         functions.push(function);
     }
     functions
