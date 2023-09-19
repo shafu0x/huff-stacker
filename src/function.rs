@@ -1,9 +1,11 @@
+use std::collections::HashMap;
 use crate::parser::parse_line;
 use crate::stack::{Stack, StackHistory};
 use crate::token::TokenType;
 
 const COMMENT_START: &str = "//";
 
+#[derive(Debug, Clone)]
 pub struct Function {
     pub name: String,
     pub start: usize, // line number where the function starts
@@ -55,5 +57,25 @@ impl Function {
             stack_history.push(stack.clone());
         }
         self.stack_history = stack_history
+    }
+}
+
+#[derive(Debug)]
+pub struct FunctionTable {
+    pub table: HashMap<String, Function>,
+}
+
+impl FunctionTable {
+    pub fn new() -> Self {
+        FunctionTable {
+            table: HashMap::new(),
+        }
+    }
+
+    pub fn add(&mut self, function: Function) {
+        if self.table.contains_key(&function.name) {
+            panic!("Function {} already exists", function.name);
+        }
+        self.table.insert(function.name.clone(), function);
     }
 }
