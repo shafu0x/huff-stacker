@@ -73,10 +73,7 @@ impl Token {
                     .iter()
                     .map(|operand| operand.to_str())
                     .collect::<Vec<String>>()
-                    .join(match opcode.sign {
-                        Some(sign) => sign,
-                        None => " ",
-                    });
+                    .join(opcode.sign.unwrap_or(" "));
                 format!("{}: {}", opcode.name, operands_str)
             }
             _ => self.value.clone(),
