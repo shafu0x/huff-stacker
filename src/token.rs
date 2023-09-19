@@ -67,13 +67,14 @@ impl Token {
     pub fn to_str(&self) -> String {
         match &self.token_type {
             TokenType::Opcode => {
+                let opcode = self.opcode.as_ref().unwrap();
                 let operands_str = self
                     .operands
                     .iter()
                     .map(|operand| operand.to_str())
                     .collect::<Vec<String>>()
-                    .join(" ");
-                format!("{}: {}", self.opcode.as_ref().unwrap().name, operands_str)
+                    .join(opcode.sign.unwrap_or(" "));
+                format!("{}: {}", opcode.name, operands_str)
             }
             _ => self.value.clone(),
         }
