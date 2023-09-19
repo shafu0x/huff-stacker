@@ -33,7 +33,7 @@ impl Function {
         self.body.lines().map(|line| line.len()).max().unwrap_or(0)
     }
 
-    pub fn gen_stack_history(&mut self) {
+    pub fn gen_stack_history(&mut self, functionsMap: &FunctionsMap) {
         let mut stack_history = StackHistory::new();
         let mut stack = Stack::new();
         stack.push_takes(self.takes);
@@ -47,10 +47,12 @@ impl Function {
                         stack.push(token);
                     } else if token.token_type == TokenType::Variable {
                         stack.push(token);
+                    } else if token.token_type == TokenType::Function {
+                        stack.execute_function(functionsMap.map.get(&token.value).unwrap());
                     } else if token.token_type == TokenType::Opcode {
                         // IMPORTANT: We need to set the operands before executing the opcode
                         token.set_operands(&stack);
-                        stack.execute(token);
+                        stack.execute_opcode(token);
                     }
                 }
             }

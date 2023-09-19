@@ -1,4 +1,5 @@
 use crate::token::{Token, TokenType};
+use crate::function::Function;
 
 #[derive(Debug, Clone)]
 pub struct StackHistory {
@@ -36,7 +37,7 @@ impl Stack {
         }
     }
 
-    pub fn execute(&mut self, token: Token) {
+    pub fn execute_opcode(&mut self, token: Token) {
         let opcode = token.opcode.as_ref().unwrap();
 
         for _ in 0..opcode.pops {
@@ -44,6 +45,19 @@ impl Stack {
         }
 
         if opcode.pushes == 1 {
+            self.push(token);
+        }
+    }
+
+    pub fn execute_function(&mut self, function: &Function) {
+        for _ in 0..function.takes {
+            self.pop().unwrap();
+        }
+
+        for i in 0..function.returns {
+            let mut token = Token::new();
+            token.value = format!("{}: ${}", function.name, i);
+            token.token_type = TokenType::Constant;
             self.push(token);
         }
     }

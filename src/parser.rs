@@ -49,7 +49,6 @@ fn parse_function(contents: &str, skip: usize) -> Option<Function> {
         // end of function
         if trimmed_line.starts_with(MACRO_END) {
             function.end = line_number + skip;
-            function.gen_stack_history();
             in_function = false;
             return Some(function);
         }
@@ -103,10 +102,14 @@ pub fn parse(path: &str) -> Vec<Function> {
     let mut functionsMap = FunctionsMap::new();
     let mut functions = Vec::new();
     let mut skip = 0;
-    while let Some(function) = parse_function(&contents, skip) {
+    while let Some(mut function) = parse_function(&contents, skip) {
         skip = function.end + 1;
         functions.push(function.clone());
         functionsMap.add(function);
+    }
+
+    for mut function in functions.iter_mut() {
+        function.gen_stack_history(&functionsMap);
     }
 
     functions
