@@ -1,12 +1,13 @@
 /* Methods */
 #define macro SET_VALUE2() = takes (5) returns (0) {
-    0x04  // [$0, $1, $2, $3, $4, 0x04]
-    0x04  // [$0, $1, $2, $3, $4, 0x04, 0x04]
-    0x04  // [$0, $1, $2, $3, $4, 0x04, 0x04, 0x04]
-    0x04  // [$0, $1, $2, $3, $4, 0x04, 0x04, 0x04, 0x04]
+    0x04      // [$0, $1, $2, $3, $4, 0x04]
+    0x04      // [$0, $1, $2, $3, $4, 0x04, 0x04]
+    _XXX_YYY  // [$0, $1, $2, $3, $4, 0x04, 0x04]
+    0x04      // [$0, $1, $2, $3, $4, 0x04, 0x04, 0x04]
+    0x04      // [$0, $1, $2, $3, $4, 0x04, 0x04, 0x04, 0x04]
 }
 
-#define macro XXX_YYY() = takes (5) returns (8) {
+#define macro _XXX_YYY() = takes (5) returns (8) {
     0x06              // [$0, $1, $2, $3, $4, 0x06]
     calldataload      // [$0, $1, $2, $3, $4, calldataload: 0x06]
     [VALUE_LOCATION]  // [$0, $1, $2, $3, $4, calldataload: 0x06, [VALUE_LOCATION]]
@@ -23,7 +24,7 @@
     0x02
 }
 
-#define macro SET_VALUE2() = takes (0) returns (0) {
+#define macro SET_VALUE() = takes (0) returns (0) {
     0x04  // [0x04]
     0x04  // [0x04, 0x04]
     0x04  // [0x04, 0x04, 0x04]
