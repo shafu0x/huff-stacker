@@ -33,7 +33,7 @@ impl Function {
         self.body.lines().map(|line| line.len()).max().unwrap_or(0)
     }
 
-    pub fn gen_stack_history(&mut self, functionsMap: &FunctionsMap) {
+    pub fn gen_stack_history(&mut self, functions_map: &FunctionsMap) {
         let mut stack_history = StackHistory::new();
         let mut stack = Stack::new();
         stack.push_takes(self.takes);
@@ -48,7 +48,7 @@ impl Function {
                     } else if token.token_type == TokenType::Variable {
                         stack.push(token);
                     } else if token.token_type == TokenType::Function {
-                        stack.execute_function(functionsMap.map.get(&token.value).unwrap());
+                        stack.execute_function(functions_map.get(&token.value));
                     } else if token.token_type == TokenType::Opcode {
                         // IMPORTANT: We need to set the operands before executing the opcode
                         token.set_operands(&stack);
@@ -79,5 +79,9 @@ impl FunctionsMap {
             panic!("Function {} already exists", function.name);
         }
         self.map.insert(function.name.clone(), function);
+    }
+
+    pub fn get(&self, name: &str) -> &Function {
+        self.map.get(name).unwrap()
     }
 }

@@ -99,17 +99,17 @@ pub fn parse(path: &str) -> Vec<Function> {
     file.read_to_string(&mut contents)
         .expect("Error reading file");
 
-    let mut functionsMap = FunctionsMap::new();
+    let mut functions_map = FunctionsMap::new();
     let mut functions = Vec::new();
     let mut skip = 0;
-    while let Some(mut function) = parse_function(&contents, skip) {
+    while let Some(function) = parse_function(&contents, skip) {
         skip = function.end + 1;
         functions.push(function.clone());
-        functionsMap.add(function);
+        functions_map.add(function);
     }
 
-    for mut function in functions.iter_mut() {
-        function.gen_stack_history(&functionsMap);
+    for function in functions.iter_mut() {
+        function.gen_stack_history(&functions_map);
     }
 
     functions
