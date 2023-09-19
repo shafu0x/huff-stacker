@@ -1,7 +1,7 @@
+use std::collections::HashMap;
 use crate::parser::parse_line;
 use crate::stack::{Stack, StackHistory};
 use crate::token::TokenType;
-use std::collections::HashMap;
 
 const COMMENT_START: &str = "//";
 
@@ -61,21 +61,21 @@ impl Function {
 }
 
 #[derive(Debug)]
-pub struct FunctionTable {
-    pub table: HashMap<String, Function>,
+pub struct FunctionsMap {
+    pub map: HashMap<String, Function>,
 }
 
-impl FunctionTable {
+impl FunctionsMap {
     pub fn new() -> Self {
-        FunctionTable {
-            table: HashMap::new(),
+        FunctionsMap {
+            map: HashMap::new(),
         }
     }
 
     pub fn add(&mut self, function: Function) {
-        if self.table.contains_key(&function.name) {
+        if self.map.contains_key(&function.name) {
             panic!("Function {} already exists", function.name);
         }
-        self.table.insert(function.name.clone(), function);
+        self.map.insert(function.name.clone(), function);
     }
 }

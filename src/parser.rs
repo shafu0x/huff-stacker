@@ -2,7 +2,7 @@ use regex::Regex;
 use std::fs::File;
 use std::io::Read;
 
-use crate::function::{Function, FunctionTable};
+use crate::function::{Function, FunctionsMap};
 use crate::token::Token;
 
 const MACRO_START: &str = "#define macro";
@@ -100,13 +100,13 @@ pub fn parse(path: &str) -> Vec<Function> {
     file.read_to_string(&mut contents)
         .expect("Error reading file");
 
-    let mut functionsTable = FunctionTable::new();
+    let mut functionsMap = FunctionsMap::new();
     let mut functions = Vec::new();
     let mut skip = 0;
     while let Some(function) = parse_function(&contents, skip) {
         skip = function.end + 1;
         functions.push(function.clone());
-        functionsTable.add(function);
+        functionsMap.add(function);
     }
 
     functions
