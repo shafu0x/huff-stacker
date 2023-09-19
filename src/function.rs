@@ -9,6 +9,7 @@ pub struct Function {
     pub start: usize, // The line number where the function starts
     pub end: usize,   // The line number where the function ends
     pub takes: i32,   // The number of arguments the function takes
+    pub returns: i32, // The number of arguments the function returns
     pub body: String, // The body of the function
     pub stack_history: StackHistory,
 }
@@ -20,6 +21,7 @@ impl Function {
             start: 0,
             end: 0,
             takes: 0,
+            returns: 0,
             body: String::new(),
             stack_history: StackHistory::new(),
         }
@@ -34,7 +36,7 @@ impl Function {
         let mut stack = Stack::new();
         stack.push_takes(self.takes);
         for line in self.body.lines() {
-            if !line.trim().starts_with(COMMENT_START) { 
+            if !line.trim().starts_with(COMMENT_START) {
                 let tokens = parse_line(line);
                 for mut token in tokens {
                     if token.token_type == TokenType::Constant {

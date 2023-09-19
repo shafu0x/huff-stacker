@@ -6,7 +6,7 @@
     0x04
 }
 
-#define macro XXX_YYY() = takes (5) returns (0) {
+#define macro XXX_YYY() = takes (5) returns (8) {
     0x06
     calldataload
     [VALUE_LOCATION]
