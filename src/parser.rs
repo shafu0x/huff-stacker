@@ -33,8 +33,10 @@ fn parse_function(contents: &str, skip: usize) -> Option<Function> {
     let mut in_function = false;
 
     for (line_number, line) in contents.lines().skip(skip).enumerate() {
+        let trimmed_line = line.trim();
+
         // start of function
-        if line.trim().starts_with(MACRO_START) {
+        if trimmed_line.starts_with(MACRO_START) {
             function.start = line_number + skip;
             function.takes = parse_takes(line);
             in_function = true;
@@ -42,7 +44,7 @@ fn parse_function(contents: &str, skip: usize) -> Option<Function> {
         }
 
         // end of function
-        if line.trim().starts_with(MACRO_END) {
+        if trimmed_line.starts_with(MACRO_END) {
             function.end = line_number + skip;
             function.gen_stack_history();
             in_function = false;
@@ -55,7 +57,7 @@ fn parse_function(contents: &str, skip: usize) -> Option<Function> {
             continue;
         }
     }
-    None::<Function>
+    None
 }
 
 // get the number of arguments a function takes
