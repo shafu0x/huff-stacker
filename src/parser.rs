@@ -43,8 +43,7 @@ fn parse_function(contents: &str, skip: usize) -> Option<Function> {
 
         // inside function
         if in_function && !line.trim().starts_with("}") {
-            function.body.push_str(line);
-            function.body.push_str("\n");
+            function.body.push_str(&format!("{}\n", line));
             continue;
         }
 
