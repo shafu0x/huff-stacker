@@ -4,6 +4,7 @@ use crate::stack::Stack;
 const CONSTANT_START: &str = "0x";
 const REFERENCE_START: &str = "[";
 const VARIABLE_START: &str = "<";
+const FUNCTION_START: &str = "_";
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum TokenType {
@@ -11,6 +12,7 @@ pub enum TokenType {
     Opcode,
     Reference,
     Variable,
+    Function,
     Unknown,
 }
 
@@ -39,6 +41,7 @@ impl Token {
             _ if word.starts_with(CONSTANT_START) => TokenType::Constant,
             _ if word.starts_with(REFERENCE_START) => TokenType::Reference,
             _ if word.starts_with(VARIABLE_START) => TokenType::Variable,
+            _ if word.starts_with(FUNCTION_START) => TokenType::Function,
             _ => TokenType::Opcode,
         };
 
