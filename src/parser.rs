@@ -51,7 +51,7 @@ fn parse_function(contents: &str, skip: usize) -> Option<Function> {
 
         // inside function
         if in_function {
-            function.body.push_str(&format!("{}\n", line));
+            function.body.push_str(&format!("{line}\n"));
             continue;
         }
     }
