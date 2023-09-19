@@ -56,8 +56,8 @@ impl Stack {
 
         for i in 0..function.returns {
             let mut token = Token::new();
-            token.value = format!("{}: ${}", function.name, i);
-            token.token_type = TokenType::Constant;
+            token.value = format!("{}: %{}", function.name, i);
+            token.token_type = TokenType::Return;
             self.push(token);
         }
     }

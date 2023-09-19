@@ -13,6 +13,7 @@ pub enum TokenType {
     Reference,
     Variable,
     Function,
+    Return,
     Unknown,
 }
 
