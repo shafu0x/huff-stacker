@@ -33,18 +33,18 @@ fn parse_function(contents: &str, skip: usize) -> Option<Function> {
     let mut in_function = false;
 
     for (line_number, line) in contents.lines().skip(skip).enumerate() {
-        // in function
-        if in_function && !line.trim().starts_with("}") {
-            function.body.push_str(line);
-            function.body.push_str("\n");
-            continue;
-        }
-
         // start of function
         if !in_function && line.trim().starts_with(MACRO_START) {
             function.start = line_number + skip;
             function.takes = parse_takes(line);
             in_function = true;
+            continue;
+        }
+
+        // inside function
+        if in_function && !line.trim().starts_with("}") {
+            function.body.push_str(line);
+            function.body.push_str("\n");
             continue;
         }
 
