@@ -1,7 +1,7 @@
-use std::collections::HashMap;
 use crate::parser::parse_line;
 use crate::stack::{Stack, StackHistory};
 use crate::token::TokenType;
+use std::collections::HashMap;
 
 const COMMENT_START: &str = "//";
 

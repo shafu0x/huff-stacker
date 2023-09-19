@@ -1,5 +1,5 @@
-use crate::token::{Token, TokenType};
 use crate::function::Function;
+use crate::token::{Token, TokenType};
 
 #[derive(Debug, Clone)]
 pub struct StackHistory {
