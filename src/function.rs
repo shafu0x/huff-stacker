@@ -1,7 +1,7 @@
-use std::collections::HashMap;
 use crate::parser::parse_line;
 use crate::stack::{Stack, StackHistory};
 use crate::token::TokenType;
+use std::collections::HashMap;
 
 const COMMENT_START: &str = "//";
 
@@ -33,7 +33,7 @@ impl Function {
         self.body.lines().map(|line| line.len()).max().unwrap_or(0)
     }
 
-    pub fn gen_stack_history(&mut self) {
+    pub fn gen_stack_history(&mut self, functions_map: &FunctionsMap) {
         let mut stack_history = StackHistory::new();
         let mut stack = Stack::new();
         stack.push_takes(self.takes);
@@ -47,10 +47,12 @@ impl Function {
                         stack.push(token);
                     } else if token.token_type == TokenType::Variable {
                         stack.push(token);
+                    } else if token.token_type == TokenType::Function {
+                        stack.execute_function(functions_map.get(&token.value));
                     } else if token.token_type == TokenType::Opcode {
                         // IMPORTANT: We need to set the operands before executing the opcode
                         token.set_operands(&stack);
-                        stack.execute(token);
+                        stack.execute_opcode(token);
                     }
                 }
             }
@@ -77,5 +79,9 @@ impl FunctionsMap {
             panic!("Function {} already exists", function.name);
         }
         self.map.insert(function.name.clone(), function);
+    }
+
+    pub fn get(&self, name: &str) -> &Function {
+        self.map.get(name).unwrap()
     }
 }
