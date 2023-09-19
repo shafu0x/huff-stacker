@@ -32,8 +32,7 @@ impl Function {
         let mut stack = Stack::new();
         stack.push_takes(self.takes);
         for line in self.body.lines() {
-            if !line.trim().starts_with(COMMENT_START) {
-                // if not comment
+            if !line.trim().starts_with(COMMENT_START) { 
                 let tokens = parse_line(line);
                 for mut token in tokens {
                     if token.token_type == TokenType::Constant {
@@ -43,9 +42,9 @@ impl Function {
                     } else if token.token_type == TokenType::Variable {
                         stack.push(token);
                     } else if token.token_type == TokenType::Opcode {
-                        // IMPORTANT: We need to set the operands before updating the stack.
+                        // IMPORTANT: We need to set the operands before executing the opcode
                         token.set_operands(&stack);
-                        stack.update(token);
+                        stack.execute(token);
                     }
                 }
             }

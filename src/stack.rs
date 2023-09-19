@@ -36,7 +36,7 @@ impl Stack {
         }
     }
 
-    pub fn update(&mut self, token: Token) {
+    pub fn execute(&mut self, token: Token) {
         let opcode = token.opcode.as_ref().unwrap();
 
         for _ in 0..opcode.pops {
