@@ -5,6 +5,7 @@
     _XXX_YYY
     0x04
     0x04
+    lt
 }
 
 #define macro _XXX_YYY() = takes (5) returns (2) {
