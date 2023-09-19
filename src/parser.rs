@@ -38,7 +38,10 @@ fn parse_function(contents: &str, skip: usize) -> Option<Function> {
         // start of function
         if trimmed_line.starts_with(MACRO_START) {
             function.start = line_number + skip;
-            function.takes = parse_takes(line);
+            function.name = parse_function_name(line);
+            let (takes, returns) = parse_function_args(line);
+            function.takes = takes;
+            function.returns = returns;
             in_function = true;
             continue;
         }
@@ -60,18 +63,35 @@ fn parse_function(contents: &str, skip: usize) -> Option<Function> {
     None
 }
 
-// get the number of arguments a function takes
-fn parse_takes(line: &str) -> i32 {
-    let re = Regex::new(r"takes \((\d+)\)").unwrap();
-
-    if let Some(captures) = re.captures(line) {
+// return the first match for the regex found in the line
+fn parse_regex(line: &str, regex: &Regex) -> Option<String> {
+    if let Some(captures) = regex.captures(line) {
         if let Some(value_str) = captures.get(1) {
-            if let Ok(value) = value_str.as_str().parse::<i32>() {
-                return value;
-            }
+            return Some(value_str.as_str().to_string());
         }
     }
-    0
+    None
+}
+
+fn parse_function_name(line: &str) -> String {
+    let re = Regex::new(r"#define\s+macro\s+(\w+)").unwrap();
+    parse_regex(line, &re).unwrap_or_default()
+}
+
+fn parse_function_args(line: &str) -> (i32, i32) {
+    let takes_re = Regex::new(r"takes \((\d+)\)").unwrap();
+    let returns_re = Regex::new(r"returns \((\d+)\)").unwrap();
+
+    let takes = parse_regex(line, &takes_re)
+        .unwrap_or_default()
+        .parse::<i32>()
+        .unwrap_or_default();
+    let returns = parse_regex(line, &returns_re)
+        .unwrap_or_default()
+        .parse::<i32>()
+        .unwrap_or_default();
+
+    (takes, returns)
 }
 
 pub fn parse(path: &str) -> Vec<Function> {
