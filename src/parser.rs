@@ -108,6 +108,7 @@ pub fn parse(path: &str) -> Vec<Function> {
         functions_map.add(function);
     }
 
+    // we need to get the whole functions map before we can resolve the function calls
     for function in functions.iter_mut() {
         function.gen_stack_history(&functions_map);
     }
