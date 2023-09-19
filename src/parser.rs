@@ -22,13 +22,13 @@ pub fn parse_line(line: &str) -> Vec<Token> {
 /// # Arguments
 ///
 /// * `contents` - The input string containing code that may include a macro definition.
-/// * `last_start` - The line number where the last macro definition started.
+/// * `skip` - The number of lines to skip before parsing the `contents`.
 ///
 /// # Returns
 ///
 /// An `Option` containing the parsed `Function` if found, or `None` if no valid
 /// function is present in the `contents`.
-fn parse_function(contents: String, skip: usize) -> Option<Function> {
+fn parse_function(contents: &str, skip: usize) -> Option<Function> {
     let mut function = Function::new();
     let mut in_function = false;
 
@@ -80,13 +80,8 @@ pub fn parse(path: &str) -> Vec<Function> {
 
     let mut functions = Vec::new();
     let mut skip = 0;
-    while let Some(function) = parse_function(contents.clone(), skip) {
-        skip = function.start;
-        // tbh I don't fully understand why we need this. lol
-        if skip > 0 {
-            skip += 1;
-        }
-
+    while let Some(function) = parse_function(&contents, skip) {
+        skip = function.start+1;
         functions.push(function);
     }
     functions
