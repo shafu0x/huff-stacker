@@ -5,6 +5,7 @@ use crate::token::TokenType;
 const COMMENT_START: &str = "//";
 
 pub struct Function {
+    pub name: String,
     pub start: usize, // The line number where the function starts
     pub end: usize,   // The line number where the function ends
     pub takes: i32,   // The number of arguments the function takes
@@ -15,6 +16,7 @@ pub struct Function {
 impl Function {
     pub fn new() -> Function {
         Function {
+            name: String::new(),
             start: 0,
             end: 0,
             takes: 0,

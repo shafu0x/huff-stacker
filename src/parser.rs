@@ -37,6 +37,7 @@ fn parse_function(contents: &str, skip: usize) -> Option<Function> {
 
         // start of function
         if trimmed_line.starts_with(MACRO_START) {
+            function.name = parse_name(line);
             function.start = line_number + skip;
             function.takes = parse_takes(line);
             in_function = true;
@@ -72,6 +73,18 @@ fn parse_takes(line: &str) -> i32 {
         }
     }
     0
+}
+
+// get the name of the function
+fn parse_name(line: &str) -> String {
+    let re = Regex::new(r"#define\s+macro\s+(\w+)").unwrap();
+
+    if let Some(captures) = re.captures(line) {
+        if let Some(value_str) = captures.get(1) {
+            return value_str.as_str().to_string();
+        }
+    }
+    String::new()
 }
 
 pub fn parse(path: &str) -> Vec<Function> {
