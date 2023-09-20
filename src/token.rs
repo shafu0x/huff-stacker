@@ -5,6 +5,7 @@ const CONSTANT_START: &str = "0x";
 const REFERENCE_START: &str = "[";
 const VARIABLE_START: &str = "<";
 const FUNCTION_START: &str = "_";
+const JUMP_LABEL_END: &str = ":";
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum TokenType {
@@ -14,6 +15,7 @@ pub enum TokenType {
     Variable,
     Function,
     Return,
+    JumpLabel,
     Unknown,
 }
 
@@ -43,6 +45,7 @@ impl Token {
             _ if word.starts_with(REFERENCE_START) => TokenType::Reference,
             _ if word.starts_with(VARIABLE_START) => TokenType::Variable,
             _ if word.starts_with(FUNCTION_START) => TokenType::Function,
+            _ if word.ends_with(JUMP_LABEL_END) => TokenType::JumpLabel,
             _ => TokenType::Opcode,
         };
 

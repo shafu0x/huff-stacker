@@ -88,7 +88,7 @@ impl Opcode {
             "revert" => REVERT,
             "invalid" => INVALID,
             "selfdestruct" => SELFDESTRUCT,
-            &_ => INVALID,
+            &_ => panic!("Unknown opcode: {}", name),
         }
     }
 }
