@@ -68,17 +68,21 @@ impl Token {
         match &self.token_type {
             TokenType::Opcode => {
                 let opcode = self.opcode.as_ref().unwrap();
-                let operands_str = self
+                let sign = match opcode.sign {
+                    Some(sign) => format!(" {} ", sign).to_string(),
+                    None => ",".to_string(),
+                };
+                let operands = self
                     .operands
                     .iter()
                     .map(|operand| operand.to_str())
                     .collect::<Vec<String>>()
-                    .join(opcode.sign.unwrap_or(","));
+                    .join(&sign);
                 let name = match opcode.sign {
                     Some(_) => String::new(),
                     None => opcode.name.to_lowercase(),
                 };
-                format!("{}({})", name, operands_str)
+                format!("{}({})", name, operands)
             }
             _ => self.value.clone(),
         }

@@ -5,9 +5,9 @@
     _XXX_YYY  // [$0, $1, _XXX_YYY: %0, _XXX_YYY: %1]
     0x04      // [$0, $1, _XXX_YYY: %0, _XXX_YYY: %1, 0x04]
     0x55      // [$0, $1, _XXX_YYY: %0, _XXX_YYY: %1, 0x04, 0x55]
-    lt        // [$0, $1, _XXX_YYY: %0, _XXX_YYY: %1, (0x55<0x04)]
-    0x87      // [$0, $1, _XXX_YYY: %0, _XXX_YYY: %1, (0x55<0x04), 0x87]
-    gt        // [$0, $1, _XXX_YYY: %0, _XXX_YYY: %1, (0x87>(0x55<0x04))]
+    lt        // [$0, $1, _XXX_YYY: %0, _XXX_YYY: %1, (0x55 < 0x04)]
+    0x87      // [$0, $1, _XXX_YYY: %0, _XXX_YYY: %1, (0x55 < 0x04), 0x87]
+    gt        // [$0, $1, _XXX_YYY: %0, _XXX_YYY: %1, (0x87 > (0x55 < 0x04))]
 }
 
 #define macro _XXX_YYY() = takes (5) returns (2) {
