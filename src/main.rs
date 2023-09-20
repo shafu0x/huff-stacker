@@ -15,5 +15,5 @@ fn main() {
     let path_out = args[2].to_string();
 
     let functions = parse(&path_in);
-    write(&path_in, &functions, &path_out);
+    write(&path_in, &path_out, &functions);
 }

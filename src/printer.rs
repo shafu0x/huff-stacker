@@ -51,14 +51,13 @@ fn merge(function: &Function, content_lines: &mut Vec<String>, comments: String)
                 }
             }
         }
-
         i += 1;
     }
 
     content_lines.to_vec()
 }
 
-pub fn write(path_in: &str, functions: &Vec<Function>, path_out: &str) {
+pub fn write(path_in: &str, path_out: &str, functions: &Vec<Function>) {
     let mut file = File::open(path_in).expect("File not found");
     let mut contents = String::new();
     file.read_to_string(&mut contents)
