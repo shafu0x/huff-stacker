@@ -73,8 +73,12 @@ impl Token {
                     .iter()
                     .map(|operand| operand.to_str())
                     .collect::<Vec<String>>()
-                    .join(opcode.sign.unwrap_or(" "));
-                format!("{}: {}", opcode.name, operands_str)
+                    .join(opcode.sign.unwrap_or(","));
+                let name = match opcode.sign {
+                    Some(_) => String::new(),
+                    None => opcode.name.to_lowercase(),
+                };
+                format!("{}({})", name, operands_str)
             }
             _ => self.value.clone(),
         }

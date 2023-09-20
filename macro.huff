@@ -4,8 +4,9 @@
     0x04
     _XXX_YYY
     0x04
-    0x04
+    0x55
     lt
+    0x87
     gt
 }
 
