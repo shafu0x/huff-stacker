@@ -1,13 +1,14 @@
 /* Methods */
 #define macro SET_VALUE2() = takes (2) returns (0) {
-    0x04      // [$0, $1, 0x04]
-    0x04      // [$0, $1, 0x04, 0x04]
-    _XXX_YYY  // [$0, $1, 0x04, _XXX_YYY: %0]
-    0x04      // [$0, $1, 0x04, _XXX_YYY: %0, 0x04]
-    0x55      // [$0, $1, 0x04, _XXX_YYY: %0, 0x04, 0x55]
-    lt        // [$0, $1, 0x04, _XXX_YYY: %0, (0x55 < 0x04)]
-    0x87      // [$0, $1, 0x04, _XXX_YYY: %0, (0x55 < 0x04), 0x87]
-    gt        // [$0, $1, 0x04, _XXX_YYY: %0, (0x87 > (0x55 < 0x04))]
+    0x04        // [$0, $1, 0x04]
+    0x04        // [$0, $1, 0x04, 0x04]
+    _XXX_YYY    // [$0, $1, 0x04, _XXX_YYY: %0]
+    0x04        // [$0, $1, 0x04, _XXX_YYY: %0, 0x04]
+    __FUNC_SIG  // [$0, $1, 0x04, _XXX_YYY: %0, __FUNC_SIG: %0]
+    0x55        // [$0, $1, 0x04, _XXX_YYY: %0, __FUNC_SIG: %0, 0x55]
+    lt          // [$0, $1, 0x04, _XXX_YYY: %0, (0x55 < __FUNC_SIG: %0)]
+    0x87        // [$0, $1, 0x04, _XXX_YYY: %0, (0x55 < __FUNC_SIG: %0), 0x87]
+    gt          // [$0, $1, 0x04, _XXX_YYY: %0, (0x87 > (0x55 < __FUNC_SIG: %0))]
 }
 
 #define macro _XXX_YYY() = takes (1) returns (1) {

@@ -4,6 +4,7 @@
     0x04
     _XXX_YYY
     0x04
+    __FUNC_SIG
     0x55
     lt
     0x87

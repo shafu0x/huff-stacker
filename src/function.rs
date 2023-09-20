@@ -29,6 +29,15 @@ impl Function {
         }
     }
 
+    // create a function that is built into huff
+    pub fn builtin(name: &str) -> Function {
+        let mut function = Function::new();
+        function.name = name.to_string();
+        function.takes = 1;
+        function.returns = 1;
+        function
+    }
+
     pub fn longest_line(&self) -> usize {
         self.body.lines().map(|line| line.len()).max().unwrap_or(0)
     }
@@ -69,9 +78,30 @@ pub struct FunctionsMap {
 
 impl FunctionsMap {
     pub fn new() -> Self {
-        FunctionsMap {
-            map: HashMap::new(),
-        }
+        FunctionsMap { map: Self::init() }
+    }
+
+    // add all the built-in huff functions to the map
+    fn init() -> HashMap<String, Function> {
+        let mut map = HashMap::new();
+
+        let func_sig = Function::builtin("__FUNC_SIG");
+        let event_hash = Function::builtin("__EVENT_HASH");
+        let error = Function::builtin("__ERROR");
+        let right_pad = Function::builtin("__RIGHT_PAD");
+        let codesize = Function::builtin("__CODESIZE");
+        let tablestart = Function::builtin("__TABLESTART");
+        let tablesize = Function::builtin("__TABLESIZE");
+
+        map.insert(func_sig.name.clone(), func_sig);
+        map.insert(event_hash.name.clone(), event_hash);
+        map.insert(error.name.clone(), error);
+        map.insert(right_pad.name.clone(), right_pad);
+        map.insert(codesize.name.clone(), codesize);
+        map.insert(tablestart.name.clone(), tablestart);
+        map.insert(tablesize.name.clone(), tablesize);
+
+        map
     }
 
     pub fn add(&mut self, function: Function) {
