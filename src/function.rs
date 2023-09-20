@@ -1,4 +1,4 @@
-use crate::jump::JumpsMap;
+use crate::jump::JumpLabelsMap;
 use crate::parser::parse_line;
 use crate::stack::{Stack, StackHistory};
 use crate::token::TokenType;
@@ -15,7 +15,7 @@ pub struct Function {
     pub returns: i32, // number of arguments the function returns
     pub body: String, // body of the function
     pub stack_history: StackHistory,
-    pub jumps_map: JumpsMap,
+    pub jump_labels_map: JumpLabelsMap,
 }
 
 impl Function {
@@ -28,7 +28,7 @@ impl Function {
             returns: 0,
             body: String::new(),
             stack_history: StackHistory::new(),
-            jumps_map: JumpsMap::new(),
+            jump_labels_map: JumpLabelsMap::new(),
         }
     }
 

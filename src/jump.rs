@@ -1,33 +1,33 @@
 use std::collections::HashMap;
 
 #[derive(Debug, Clone)]
-pub struct Jump {
+pub struct JumpLabel {
     pub name: String,
 }
 
-impl Jump {
-    pub fn new(name: String) -> Jump {
-        Jump { name: name }
+impl JumpLabel {
+    pub fn new(name: String) -> JumpLabel {
+        JumpLabel { name: name }
     }
 }
 
 #[derive(Debug, Clone)]
-pub struct JumpsMap {
-    pub map: HashMap<String, Jump>,
+pub struct JumpLabelsMap {
+    pub map: HashMap<String, JumpLabel>,
 }
 
-impl JumpsMap {
-    pub fn new() -> JumpsMap {
-        JumpsMap {
+impl JumpLabelsMap {
+    pub fn new() -> JumpLabelsMap {
+        JumpLabelsMap {
             map: HashMap::new(),
         }
     }
 
     pub fn add(&mut self, name: String) {
-        self.map.insert(name.clone(), Jump::new(name));
+        self.map.insert(name.clone(), JumpLabel::new(name));
     }
 
-    pub fn get(&self, name: &str) -> Option<&Jump> {
+    pub fn get(&self, name: &str) -> Option<&JumpLabel> {
         self.map.get(name)
     }
 }
