@@ -50,18 +50,19 @@ impl Function {
             if !line.trim().starts_with(COMMENT_START) {
                 let tokens = parse_line(line);
                 for mut token in tokens {
-                    if token.token_type == TokenType::Constant {
-                        stack.push(token);
-                    } else if token.token_type == TokenType::Reference {
-                        stack.push(token);
-                    } else if token.token_type == TokenType::Variable {
-                        stack.push(token);
-                    } else if token.token_type == TokenType::Function {
-                        stack.execute_function(functions_map.get(&token.value));
-                    } else if token.token_type == TokenType::Opcode {
-                        // IMPORTANT: We need to set the operands before executing the opcode
-                        token.set_operands(&stack);
-                        stack.execute_opcode(token);
+                    match token.token_type {
+                        TokenType::Constant | TokenType::Reference | TokenType::Variable => {
+                            stack.push(token);
+                        }
+                        TokenType::Function => {
+                            stack.execute_function(functions_map.get(&token.value));
+                        }
+                        TokenType::Opcode => {
+                            // IMPORTANT: We need to set the operands before executing the opcode
+                            token.set_operands(&stack);
+                            stack.execute_opcode(token);
+                        }
+                        _ => {}
                     }
                 }
             }
