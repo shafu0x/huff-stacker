@@ -52,6 +52,7 @@ impl Function {
                     } else if token.token_type == TokenType::Opcode {
                         // IMPORTANT: We need to set the operands before executing the opcode
                         token.set_operands(&stack);
+                        println!("{:?}", token.operands);
                         stack.execute_opcode(token);
                     }
                 }
@@ -82,6 +83,6 @@ impl FunctionsMap {
     }
 
     pub fn get(&self, name: &str) -> &Function {
-        self.map.get(name).unwrap()
+        self.map.get(name).expect(&format!("ERROR: Function {} not found", name))
     }
 }

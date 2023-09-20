@@ -26,6 +26,10 @@ impl Stack {
         Stack { values: Vec::new() }
     }
 
+    pub fn get(&self, index: usize) -> Option<&Token> {
+        self.values.get(index)
+    }
+
     pub fn push_takes(&mut self, takes: i32) {
         if takes > 0 {
             for i in 0..takes {
@@ -72,5 +76,9 @@ impl Stack {
 
     pub fn peek(&self) -> Option<&Token> {
         self.values.last()
+    }
+
+    pub fn len(&self) -> usize {
+        self.values.len()
     }
 }
