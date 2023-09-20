@@ -1,35 +1,20 @@
 /* Methods */
-#define macro SET_VALUE2() = takes (5) returns (0) {
-    0x04      // [$0, $1, $2, $3, $4, 0x04]
-    0x04      // [$0, $1, $2, $3, $4, 0x04, 0x04]
-    _XXX_YYY  // [$0, $1, _XXX_YYY: %0, _XXX_YYY: %1]
-    0x04      // [$0, $1, _XXX_YYY: %0, _XXX_YYY: %1, 0x04]
-    0x55      // [$0, $1, _XXX_YYY: %0, _XXX_YYY: %1, 0x04, 0x55]
-    lt        // [$0, $1, _XXX_YYY: %0, _XXX_YYY: %1, (0x55 < 0x04)]
-    0x87      // [$0, $1, _XXX_YYY: %0, _XXX_YYY: %1, (0x55 < 0x04), 0x87]
-    gt        // [$0, $1, _XXX_YYY: %0, _XXX_YYY: %1, (0x87 > (0x55 < 0x04))]
+#define macro SET_VALUE2() = takes (2) returns (0) {
+    0x04      // [$0, $1, 0x04]
+    0x04      // [$0, $1, 0x04, 0x04]
+    _XXX_YYY  // [$0, $1, 0x04, _XXX_YYY: %0]
+    0x04      // [$0, $1, 0x04, _XXX_YYY: %0, 0x04]
+    0x55      // [$0, $1, 0x04, _XXX_YYY: %0, 0x04, 0x55]
+    lt        // [$0, $1, 0x04, _XXX_YYY: %0, (0x55 < 0x04)]
+    0x87      // [$0, $1, 0x04, _XXX_YYY: %0, (0x55 < 0x04), 0x87]
+    gt        // [$0, $1, 0x04, _XXX_YYY: %0, (0x87 > (0x55 < 0x04))]
 }
 
-#define macro _XXX_YYY() = takes (5) returns (2) {
-    0x06              // [$0, $1, $2, $3, $4, 0x06]
-    calldataload      // [$0, $1, $2, $3, $4, calldataload(0x06)]
-    [VALUE_LOCATION]  // [$0, $1, $2, $3, $4, calldataload(0x06), [VALUE_LOCATION]]
-    sstore            // [$0, $1, $2, $3, $4]
-    0x69              // [$0, $1, $2, $3, $4, 0x69]
-    0x00              // [$0, $1, $2, $3, $4, 0x69, 0x00]
-    mstore            // [$0, $1, $2, $3, $4]
-    0x66              // [$0, $1, $2, $3, $4, 0x66]
-    // 0x99
-    0x00              // [$0, $1, $2, $3, $4, 0x66, 0x00]
-    stop              // [$0, $1, $2, $3, $4, 0x66, 0x00] -- end
-    0x00
-    0x01
-    0x02
-}
-
-#define macro SET_VALUE() = takes (0) returns (0) {
-    0x04  // [0x04]
-    0x04  // [0x04, 0x04]
-    0x04  // [0x04, 0x04, 0x04]
-    0x04  // [0x04, 0x04, 0x04, 0x04]
+#define macro _XXX_YYY() = takes (1) returns (1) {
+    0x06              // [$0, 0x06]
+    calldataload      // [$0, calldataload(0x06)]
+    [VALUE_LOCATION]  // [$0, calldataload(0x06), [VALUE_LOCATION]]
+    sstore            // [$0]
+    0x69              // [$0, 0x69]
+    0x00              // [$0, 0x69, 0x00]
 }
