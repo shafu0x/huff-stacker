@@ -3,6 +3,7 @@ use std::fs::File;
 use std::io::Read;
 
 use crate::function::{Function, FunctionsMap};
+use crate::jump::{JumpLabel, JumpLabelsMap};
 use crate::token::Token;
 
 const MACRO_START: &str = "#define macro";
@@ -102,8 +103,10 @@ pub fn parse(path: &str) -> Vec<Function> {
     let mut functions_map = FunctionsMap::new();
     let mut functions = Vec::new();
     let mut skip = 0;
-    while let Some(function) = parse_function(&contents, skip) {
+    while let Some(mut function) = parse_function(&contents, skip) {
         skip = function.end + 1;
+        // we need to generate the jump labels BEFORE generating the stack history
+        function.gen_jump_labels();
         functions.push(function.clone());
         functions_map.add(function);
     }

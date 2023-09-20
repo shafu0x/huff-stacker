@@ -45,6 +45,17 @@ impl Function {
         self.body.lines().map(|line| line.len()).max().unwrap_or(0)
     }
 
+    pub fn gen_jump_labels(&mut self) {
+        let mut jump_labels_map = JumpLabelsMap::new();
+        for line in self.body.lines() {
+            let trimmed_line = line.trim();
+            if trimmed_line.ends_with(":") {
+                jump_labels_map.add(trimmed_line.to_string());
+            }
+        }
+        self.jump_labels_map = jump_labels_map;
+    }
+
     pub fn gen_stack_history(&mut self, functions_map: &FunctionsMap) {
         let mut stack_history = StackHistory::new();
         let mut stack = Stack::new();
