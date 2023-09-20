@@ -9,6 +9,10 @@
     lt          // [$0, $1, 0x04, _XXX_YYY: %0, (0x55 < __FUNC_SIG: %0)]
     0x87        // [$0, $1, 0x04, _XXX_YYY: %0, (0x55 < __FUNC_SIG: %0), 0x87]
     gt          // [$0, $1, 0x04, _XXX_YYY: %0, (0x87 > (0x55 < __FUNC_SIG: %0))]
+
+    success:    // [$0, $1, 0x04, _XXX_YYY: %0, (0x87 > (0x55 < __FUNC_SIG: %0))]
+       0x00     // [$0, $1, 0x04, _XXX_YYY: %0, (0x87 > (0x55 < __FUNC_SIG: %0)), 0x00]
+       0x00     // [$0, $1, 0x04, _XXX_YYY: %0, (0x87 > (0x55 < __FUNC_SIG: %0)), 0x00, 0x00]
 }
 
 #define macro _XXX_YYY() = takes (1) returns (1) {

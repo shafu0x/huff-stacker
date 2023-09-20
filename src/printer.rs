@@ -33,6 +33,10 @@ fn create_comments(function: &Function) -> String {
     final_text
 }
 
+fn is_comment_or_empty(line: &str) -> bool {
+    line.trim().starts_with(COMMENT_START) || line.trim().is_empty()
+}
+
 // merge the comments with the original file contents
 fn merge(function: &Function, content_lines: &mut Vec<String>, comments: String) -> Vec<String> {
     let comment_lines: Vec<String> = comments.lines().map(|l| l.to_string()).collect();
@@ -43,7 +47,7 @@ fn merge(function: &Function, content_lines: &mut Vec<String>, comments: String)
 
         if let Some(content_line) = content_line {
             let comment_line = &comment_lines[i];
-            if !content_line.trim().starts_with(COMMENT_START) {
+            if !is_comment_or_empty(comment_line) {
                 *content_line = comment_line.clone();
                 if comment_line.contains(STOP.name) {
                     content_line.push_str(END_SIGN);
