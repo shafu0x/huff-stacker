@@ -59,7 +59,7 @@ impl Token {
     pub fn set_operands(&mut self, stack: &Stack) {
         let mut operands = Vec::new();
         for i in 0..self.opcode.as_ref().unwrap().pops {
-            operands.push(stack.get(stack.len()-1 - i).unwrap().clone());
+            operands.push(stack.get(stack.len() - 1 - i).unwrap().clone());
         }
         self.operands = operands;
     }

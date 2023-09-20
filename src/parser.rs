@@ -94,7 +94,7 @@ fn parse_function_args(line: &str) -> (i32, i32) {
 }
 
 pub fn parse(path: &str) -> Vec<Function> {
-    let mut file = File::open(path).expect("File not found");
+    let mut file = File::open(path).expect(&format!("Unable to open file: {}", path));
     let mut contents = String::new();
     file.read_to_string(&mut contents)
         .expect("Error reading file");

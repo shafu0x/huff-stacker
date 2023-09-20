@@ -1,12 +1,7 @@
 #!/bin/bash
 
-if [[ $(uname) == "Linux" ]]; then
-  PATH_IN=/home/shafu/huff-stack-generator/macro.huff
-  PATH_OUT=/home/shafu/huff-stack-generator/out.huff
-else # for mac
-  PATH_IN=/Users/shafu/huff-stack-generator/macro.huff
-  PATH_OUT=/Users/shafu/huff-stack-generator/out.huff
-fi
+PATH_IN=$HOME/huff-stacker/macro.huff
+PATH_OUT=$HOME/huff-stacker/out.huff
 
 cargo run $PATH_IN $PATH_OUT
 
