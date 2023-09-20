@@ -5,7 +5,7 @@ const CONSTANT_START: &str = "0x";
 const REFERENCE_START: &str = "[";
 const VARIABLE_START: &str = "<";
 const FUNCTION_START: &str = "_";
-const JUMP_LABEL_END: &str = ":";
+pub const JUMP_LABEL_END: &str = ":";
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum TokenType {

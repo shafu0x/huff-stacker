@@ -1,7 +1,7 @@
-use crate::jump::JumpLabelsMap;
+use crate::jump::{JumpLabel, JumpLabelsMap};
 use crate::parser::parse_line;
 use crate::stack::{Stack, StackHistory};
-use crate::token::TokenType;
+use crate::token::{TokenType, JUMP_LABEL_END};
 use std::collections::HashMap;
 
 const COMMENT_START: &str = "//";
@@ -47,10 +47,11 @@ impl Function {
 
     pub fn gen_jump_labels(&mut self) {
         let mut jump_labels_map = JumpLabelsMap::new();
-        for line in self.body.lines() {
+        for (i, line) in self.body.lines().enumerate() {
             let trimmed_line = line.trim();
-            if trimmed_line.ends_with(":") {
-                jump_labels_map.add(trimmed_line.to_string());
+            if trimmed_line.ends_with(JUMP_LABEL_END) {
+                let jump_label = JumpLabel::new(trimmed_line.to_string(), i);
+                jump_labels_map.add(jump_label);
             }
         }
         self.jump_labels_map = jump_labels_map;

@@ -3,11 +3,15 @@ use std::collections::HashMap;
 #[derive(Debug, Clone)]
 pub struct JumpLabel {
     pub name: String,
+    pub start: usize,
 }
 
 impl JumpLabel {
-    pub fn new(name: String) -> JumpLabel {
-        JumpLabel { name: name }
+    pub fn new(name: String, start: usize) -> JumpLabel {
+        JumpLabel {
+            name: name,
+            start: 0,
+        }
     }
 }
 
@@ -23,8 +27,8 @@ impl JumpLabelsMap {
         }
     }
 
-    pub fn add(&mut self, name: String) {
-        self.map.insert(name.clone(), JumpLabel::new(name));
+    pub fn add(&mut self, jump_label: JumpLabel) {
+        self.map.insert(jump_label.name.clone(), jump_label);
     }
 
     pub fn get(&self, name: &str) -> Option<&JumpLabel> {
