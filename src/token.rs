@@ -15,7 +15,7 @@ pub enum TokenType {
     Variable,
     Function,
     Return,
-    JumpLabel,
+    Jump,
     Unknown,
 }
 
@@ -45,7 +45,7 @@ impl Token {
             _ if word.starts_with(REFERENCE_START) => TokenType::Reference,
             _ if word.starts_with(VARIABLE_START) => TokenType::Variable,
             _ if word.starts_with(FUNCTION_START) => TokenType::Function,
-            _ if word.ends_with(JUMP_LABEL_END) => TokenType::JumpLabel,
+            _ if word.ends_with(JUMP_LABEL_END) => TokenType::Jump,
             _ => TokenType::Opcode,
         };
 

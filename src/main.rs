@@ -1,4 +1,5 @@
 mod function;
+mod jump;
 mod opcodes;
 mod parser;
 mod printer;
