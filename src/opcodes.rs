@@ -103,6 +103,7 @@ macro_rules! define_opcode {
         };
     };
 }
+
 define_opcode!(STOP, "stop", 0, 0, None);
 define_opcode!(ADD, "add", 2, 1, Some("+"));
 define_opcode!(MUL, "mul", 2, 1, Some("*"));
