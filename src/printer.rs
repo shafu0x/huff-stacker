@@ -41,11 +41,8 @@ fn is_comment_or_empty(line: &str) -> bool {
 fn merge(function: &Function, content_lines: &mut Vec<String>, comments: String) -> Vec<String> {
     let comment_lines: Vec<String> = comments.lines().map(|l| l.to_string()).collect();
 
-    let mut i = 0;
-    for index in function.start + 1..=function.start + comment_lines.len() {
-        let content_line = content_lines.get_mut(index);
-
-        if let Some(content_line) = content_line {
+    for (i, index) in (function.start + 1..=function.start + comment_lines.len()).enumerate() {
+        if let Some(content_line) = content_lines.get_mut(index) {
             let comment_line = &comment_lines[i];
             if !is_comment_or_empty(comment_line) {
                 *content_line = comment_line.clone();
@@ -55,7 +52,6 @@ fn merge(function: &Function, content_lines: &mut Vec<String>, comments: String)
                 }
             }
         }
-        i += 1;
     }
 
     content_lines.to_vec()
