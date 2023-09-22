@@ -9,28 +9,27 @@ const END_SIGN: &str = " -- end";
 const COMMENT_START: &str = "//";
 
 fn create_comments(function: &Function) -> String {
-    let mut final_text = String::new();
-    for (i, line) in function.body.lines().enumerate() {
-        let final_len = function.longest_line() - line.len() + 1;
-        final_text.push_str(line);
-        for _ in 0..final_len {
-            final_text.push_str(" ");
-        }
-        final_text.push_str(" // ");
-        final_text.push_str("[");
-        final_text.push_str(
-            function.stack_history.stacks[i]
-                .values
-                .iter()
-                .map(|token| token.to_str())
-                .collect::<Vec<_>>()
-                .join(", ")
-                .as_str(),
-        );
-        final_text.push_str("]");
-        final_text.push_str("\n");
-    }
-    final_text
+    function
+        .body
+        .lines()
+        .enumerate()
+        .fold(String::new(), |mut accumulator, (i, line)| {
+            let final_len = function.longest_line() - line.len() + 1;
+            accumulator.push_str(line);
+            accumulator.extend((0..final_len).map(|_| " "));
+            accumulator.push_str(" // [");
+            accumulator.push_str(
+                function.stack_history.stacks[i]
+                    .values
+                    .iter()
+                    .map(|token| token.to_str())
+                    .collect::<Vec<_>>()
+                    .join(", ")
+                    .as_str(),
+            );
+            accumulator.push_str("]\n");
+            accumulator
+        })
 }
 
 fn is_comment_or_empty(line: &str) -> bool {
@@ -41,11 +40,8 @@ fn is_comment_or_empty(line: &str) -> bool {
 fn merge(function: &Function, content_lines: &mut Vec<String>, comments: String) -> Vec<String> {
     let comment_lines: Vec<String> = comments.lines().map(|l| l.to_string()).collect();
 
-    let mut i = 0;
-    for index in function.start + 1..=function.start + comment_lines.len() {
-        let content_line = content_lines.get_mut(index);
-
-        if let Some(content_line) = content_line {
+    for (i, index) in (function.start + 1..=function.start + comment_lines.len()).enumerate() {
+        if let Some(content_line) = content_lines.get_mut(index) {
             let comment_line = &comment_lines[i];
             if !is_comment_or_empty(comment_line) {
                 *content_line = comment_line.clone();
@@ -55,7 +51,6 @@ fn merge(function: &Function, content_lines: &mut Vec<String>, comments: String)
                 }
             }
         }
-        i += 1;
     }
 
     content_lines.to_vec()
