@@ -9,28 +9,27 @@ const END_SIGN: &str = " -- end";
 const COMMENT_START: &str = "//";
 
 fn create_comments(function: &Function) -> String {
-    let mut final_text = String::new();
-    for (i, line) in function.body.lines().enumerate() {
-        let final_len = function.longest_line() - line.len() + 1;
-        final_text.push_str(line);
-        for _ in 0..final_len {
-            final_text.push_str(" ");
-        }
-        final_text.push_str(" // ");
-        final_text.push_str("[");
-        final_text.push_str(
-            function.stack_history.stacks[i]
-                .values
-                .iter()
-                .map(|token| token.to_str())
-                .collect::<Vec<_>>()
-                .join(", ")
-                .as_str(),
-        );
-        final_text.push_str("]");
-        final_text.push_str("\n");
-    }
-    final_text
+    function
+        .body
+        .lines()
+        .enumerate()
+        .fold(String::new(), |mut accumulator, (i, line)| {
+            let final_len = function.longest_line() - line.len() + 1;
+            accumulator.push_str(line);
+            accumulator.extend((0..final_len).map(|_| " "));
+            accumulator.push_str(" // [");
+            accumulator.push_str(
+                function.stack_history.stacks[i]
+                    .values
+                    .iter()
+                    .map(|token| token.to_str())
+                    .collect::<Vec<_>>()
+                    .join(", ")
+                    .as_str(),
+            );
+            accumulator.push_str("]\n");
+            accumulator
+        })
 }
 
 fn is_comment_or_empty(line: &str) -> bool {
