@@ -89,8 +89,7 @@ impl Opcode {
             "revert" => REVERT,
             "invalid" => INVALID,
             "selfdestruct" => SELFDESTRUCT,
-            &_ => JUMPLABEL,
-            // &_ => panic!("Unknown opcode: {}", name),
+            &_ => panic!("Unknown opcode: {}", name),
         }
     }
 }
@@ -186,5 +185,4 @@ define_opcode!(STATICCALL, "staticcall", 6, 1, None, "successBool");
 define_opcode!(REVERT, "revert", 2, 0, None, "");
 define_opcode!(INVALID, "invalid", 0, 0, None, "");
 define_opcode!(SELFDESTRUCT, "selfdestruct", 1, 0, None, "");
-define_opcode!(JUMPLABEL, "jumplabel", 0, 1, None, ""); // technically not an opcode
 define_opcode!(UNKNOWN, "unknown", 0, 0, None, "");

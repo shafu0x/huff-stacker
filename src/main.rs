@@ -14,7 +14,7 @@ use std::env;
 // or right-to-left
 // Default is left-to-right
 fn stack_order(args: &Vec<String>) -> &'static str {
-    if args.len() == 4 && args[3] == "--right" {
+    if args.contains(&String::from("--right")) {
         return "right";
     }
     "left"
@@ -23,8 +23,8 @@ fn stack_order(args: &Vec<String>) -> &'static str {
 // Determine if user wants to always display the opcode with its
 // args or use alts for specific opcodes
 // Default is false
-fn use_alt(args: Vec<String>) -> bool {
-    if args.len() == 5 && args[4] == "--alt" {
+fn use_alt(args: &Vec<String>) -> bool {
+    if args.contains(&String::from("--alt")) {
         return true;
     }
     false
@@ -41,6 +41,6 @@ fn main() {
         &path_out,
         &functions,
         stack_order(&args),
-        use_alt(args),
+        use_alt(&args),
     );
 }

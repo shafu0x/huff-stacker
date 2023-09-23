@@ -85,10 +85,7 @@ impl Token {
                     Some(_) => String::new(),
                     None => opcode.name.to_lowercase(),
                 };
-
-                if opcode.name == "jumplabel" {
-                    format!("{}({})", name, self.value)
-                } else if opcode.alt != "" && use_alt {
+                if opcode.alt != "" && use_alt {
                     opcode.alt.to_string()
                 } else {
                     format!("{}({})", name, operands)
