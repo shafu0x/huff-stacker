@@ -177,7 +177,7 @@ define_opcode!(LOG2, "log2", 4, 0, None, "");
 define_opcode!(LOG3, "log3", 5, 0, None, "");
 define_opcode!(LOG4, "log4", 6, 0, None, "");
 define_opcode!(CREATE, "create", 3, 1, None, "");
-define_opcode!(CALL, "call", 7, 1, None, "success");
+define_opcode!(CALL, "call", 7, 1, None, "successBool");
 define_opcode!(CALLCODE, "callcode", 7, 1, None, "");
 define_opcode!(RETURN, "return", 2, 0, None, "");
 define_opcode!(DELEGATECALL, "delegatecall", 6, 1, None, "");

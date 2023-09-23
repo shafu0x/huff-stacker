@@ -53,14 +53,24 @@ To this:
 ## How to use
 
 ```console
-$ cargo run <INPUT_FILE> <OUTPUT_FILE> 
+$ cargo run <INPUT_FILE> <OUTPUT_FILE>
 ```
 
 Optional
 
+Stack direction (default is left):
+
 ```console
 stack-direction: [--(right/left)]
 ```
+
+Use alt comments (default is false):
+
+```console
+use-alt: [--alt]
+```
+
+Note: this setting will add alternative comments. For example, instead of adding `call(param1, param2, ..., param7)` it will add `successBool` to the stack comments. You can change the alternative comments in the `src/opcodes.rs` file.
 
 #### Example
 

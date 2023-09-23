@@ -8,7 +8,7 @@ use crate::opcodes::STOP;
 const END_SIGN: &str = " -- end";
 const COMMENT_START: &str = "//";
 
-fn create_comments(function: &Function, stack_order: &str) -> String {
+fn create_comments(function: &Function, stack_order: &str, use_alt: bool) -> String {
     let mut final_text = String::new();
     for (i, line) in function.body.lines().enumerate() {
         let final_len = function.longest_line() - line.len() + 1;
@@ -21,7 +21,7 @@ fn create_comments(function: &Function, stack_order: &str) -> String {
         let mut values = function.stack_history.stacks[i]
             .values
             .iter()
-            .map(|token| token.to_str())
+            .map(|token| token.to_str(use_alt))
             .collect::<Vec<_>>();
 
         if stack_order == "right" {
@@ -63,14 +63,20 @@ fn merge(function: &Function, content_lines: &mut Vec<String>, comments: String)
     content_lines.to_vec()
 }
 
-pub fn write(path_in: &str, path_out: &str, functions: &Vec<Function>, stack_order: &str) {
+pub fn write(
+    path_in: &str,
+    path_out: &str,
+    functions: &Vec<Function>,
+    stack_order: &str,
+    use_alt: bool,
+) {
     let mut file = File::open(path_in).expect("File not found");
     let mut contents = String::new();
     file.read_to_string(&mut contents)
         .expect("Error reading file");
     let mut content_lines: Vec<String> = contents.lines().map(|l| l.to_string()).collect();
     for function in functions {
-        let comments = create_comments(function, stack_order);
+        let comments = create_comments(function, stack_order, use_alt);
         content_lines = merge(function, &mut content_lines, comments);
     }
 

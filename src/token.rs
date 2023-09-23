@@ -67,7 +67,7 @@ impl Token {
         self.operands = operands;
     }
 
-    pub fn to_str(&self) -> String {
+    pub fn to_str(&self, use_alt: bool) -> String {
         match &self.token_type {
             TokenType::Opcode => {
                 let opcode = self.opcode.as_ref().unwrap();
@@ -78,7 +78,7 @@ impl Token {
                 let operands = self
                     .operands
                     .iter()
-                    .map(|operand| operand.to_str())
+                    .map(|operand| operand.to_str(use_alt))
                     .collect::<Vec<String>>()
                     .join(&sign);
                 let name = match opcode.sign {
@@ -88,7 +88,7 @@ impl Token {
 
                 if opcode.name == "jumplabel" {
                     format!("{}({})", name, self.value)
-                } else if opcode.alt != "" {
+                } else if opcode.alt != "" && use_alt {
                     opcode.alt.to_string()
                 } else {
                     format!("{}({})", name, operands)
