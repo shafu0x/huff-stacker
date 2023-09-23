@@ -85,7 +85,12 @@ impl Token {
                     Some(_) => String::new(),
                     None => opcode.name.to_lowercase(),
                 };
-                format!("{}({})", name, operands)
+
+                if opcode.name == "jumplabel" {
+                    format!("{}({})", name, self.value)
+                } else {
+                    format!("{}({})", name, operands)
+                }
             }
             _ => self.value.clone(),
         }
