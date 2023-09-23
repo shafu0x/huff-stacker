@@ -56,6 +56,12 @@ To this:
 $ cargo run <INPUT_FILE> <OUTPUT_FILE> [--(right/left)]
 ```
 
+Optional
+
+```console
+stack-direction: [--(right/left)]
+```
+
 #### Example
 
 ```console
