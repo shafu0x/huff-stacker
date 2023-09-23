@@ -15,6 +15,8 @@ fn main() {
     let path_in = args[1].to_string();
     let path_out = args[2].to_string();
 
+    let stack_order = "right";
+
     let functions = parse(&path_in);
-    write(&path_in, &path_out, &functions);
+    write(&path_in, &path_out, &functions, stack_order);
 }
