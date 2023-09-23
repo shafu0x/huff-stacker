@@ -88,6 +88,8 @@ impl Token {
 
                 if opcode.name == "jumplabel" {
                     format!("{}({})", name, self.value)
+                } else if opcode.alt != "" {
+                    opcode.alt.to_string()
                 } else {
                     format!("{}({})", name, operands)
                 }
