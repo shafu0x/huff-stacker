@@ -53,7 +53,7 @@ To this:
 ## How to use
 
 ```console
-$ cargo run <INPUT_FILE> <OUTPUT_FILE> [--(right/left)]
+$ cargo run <INPUT_FILE> <OUTPUT_FILE> 
 ```
 
 Optional
