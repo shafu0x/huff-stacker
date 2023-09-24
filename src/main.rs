@@ -23,8 +23,8 @@ fn stack_order(args: &Vec<String>) -> &'static str {
 // Determine if user wants to always display the opcode with its
 // args or use alts for specific opcodes
 // Default is false
-fn use_alt(args: &Vec<String>) -> bool {
-    if args.contains(&String::from("--alt")) {
+fn show_stack_output(args: &Vec<String>) -> bool {
+    if args.contains(&String::from("--stack-output")) {
         return true;
     }
     false
@@ -41,6 +41,6 @@ fn main() {
         &path_out,
         &functions,
         stack_order(&args),
-        use_alt(&args),
+        show_stack_output(&args),
     );
 }

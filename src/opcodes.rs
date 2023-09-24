@@ -4,7 +4,7 @@ pub struct Opcode {
     pub pops: usize,
     pub pushes: usize,
     pub sign: Option<&'static str>,
-    pub alt: &'static str,
+    pub output: &'static str,
 }
 
 impl Opcode {
@@ -95,13 +95,13 @@ impl Opcode {
 }
 
 macro_rules! define_opcode {
-    ($name:ident, $name_str:expr, $pops:expr, $pushes:expr, $sign:expr, $alt:expr) => {
+    ($name:ident, $name_str:expr, $pops:expr, $pushes:expr, $sign:expr, $output:expr) => {
         pub const $name: Opcode = Opcode {
             name: $name_str,
             pops: $pops,
             pushes: $pushes,
             sign: $sign,
-            alt: $alt,
+            output: $output,
         };
     };
 }
@@ -132,7 +132,7 @@ define_opcode!(BYTE, "byte", 2, 1, None, "");
 define_opcode!(SHL, "shl", 2, 1, Some("<<"), "");
 define_opcode!(SHR, "shr", 2, 1, Some(">>"), "");
 define_opcode!(SAR, "sar", 2, 1, Some(">>"), "");
-define_opcode!(SHA3, "sha3", 2, 1, None, "");
+define_opcode!(SHA3, "sha3", 2, 1, None, "hash");
 define_opcode!(ADDRESS, "address", 0, 1, None, "");
 define_opcode!(BALANCE, "balance", 1, 1, None, "");
 define_opcode!(ORIGIN, "origin", 0, 1, None, "");
@@ -175,13 +175,13 @@ define_opcode!(LOG1, "log1", 3, 0, None, "");
 define_opcode!(LOG2, "log2", 4, 0, None, "");
 define_opcode!(LOG3, "log3", 5, 0, None, "");
 define_opcode!(LOG4, "log4", 6, 0, None, "");
-define_opcode!(CREATE, "create", 3, 1, None, "createdAddress");
-define_opcode!(CALL, "call", 7, 1, None, "successBool");
+define_opcode!(CREATE, "create", 3, 1, None, "address");
+define_opcode!(CALL, "call", 7, 1, None, "success");
 define_opcode!(CALLCODE, "callcode", 7, 1, None, "");
 define_opcode!(RETURN, "return", 2, 0, None, "");
-define_opcode!(DELEGATECALL, "delegatecall", 6, 1, None, "successBool");
-define_opcode!(CREATE2, "create2", 4, 1, None, "createdAddress");
-define_opcode!(STATICCALL, "staticcall", 6, 1, None, "successBool");
+define_opcode!(DELEGATECALL, "delegatecall", 6, 1, None, "success");
+define_opcode!(CREATE2, "create2", 4, 1, None, "address");
+define_opcode!(STATICCALL, "staticcall", 6, 1, None, "success");
 define_opcode!(REVERT, "revert", 2, 0, None, "");
 define_opcode!(INVALID, "invalid", 0, 0, None, "");
 define_opcode!(SELFDESTRUCT, "selfdestruct", 1, 0, None, "");

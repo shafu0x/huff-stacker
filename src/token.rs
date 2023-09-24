@@ -67,7 +67,7 @@ impl Token {
         self.operands = operands;
     }
 
-    pub fn to_str(&self, use_alt: bool) -> String {
+    pub fn to_str(&self, show_stack_output: bool) -> String {
         match &self.token_type {
             TokenType::Opcode => {
                 let opcode = self.opcode.as_ref().unwrap();
@@ -78,15 +78,15 @@ impl Token {
                 let operands = self
                     .operands
                     .iter()
-                    .map(|operand| operand.to_str(use_alt))
+                    .map(|operand| operand.to_str(show_stack_output))
                     .collect::<Vec<String>>()
                     .join(&sign);
                 let name = match opcode.sign {
                     Some(_) => String::new(),
                     None => opcode.name.to_lowercase(),
                 };
-                if opcode.alt != "" && use_alt {
-                    opcode.alt.to_string()
+                if show_stack_output && opcode.output != "" {
+                    opcode.output.to_string()
                 } else {
                     format!("{}({})", name, operands)
                 }

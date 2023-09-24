@@ -64,13 +64,13 @@ Stack direction (default is left):
 stack-direction: [--(right/left)]
 ```
 
-Use alt comments (default is false):
+Use stack output (default is false):
 
 ```console
-use-alt: [--alt]
+show-stack-output: [--stack-output]
 ```
 
-Note: this setting will add alternative comments. For example, instead of adding `call(param1, param2, ..., param7)` it will add `successBool` to the stack comments. You can change the alternative comments in the `src/opcodes.rs` file.
+Note: this setting will add stack outputs to the stack where possible. For example, instead of adding `call(param1, param2, ..., param7)` it will add `success` to the stack comments.
 
 #### Example
 
