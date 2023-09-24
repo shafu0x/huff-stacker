@@ -23,3 +23,14 @@
     0x69
     0x00
 }
+
+#define macro SWAPDUP() = takes (0) returns (10) {
+    caller
+    0x69
+    shr
+    dup1
+    0x69
+    shr
+    dup1
+    swap3
+}
