@@ -67,3 +67,9 @@ stack-direction: [--(right/left)]
 ```console
 $ cargo run /home/shafu/huff-stack-generator/macro.huff /home/shafu/huff-stack-generator/out.huff
 ```
+
+#### TODO
+
+- add dup/swap
+- use iterator
+- support jumps
