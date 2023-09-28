@@ -73,3 +73,4 @@ $ cargo run /home/shafu/huff-stack-generator/macro.huff /home/shafu/huff-stack-g
 - add dup/swap
 - use iterator
 - support jumps
+- huff lexer
