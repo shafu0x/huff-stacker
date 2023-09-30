@@ -3,7 +3,6 @@ use std::fs::File;
 use std::io::Read;
 
 use crate::function::{Function, FunctionsMap};
-use crate::jump::{JumpLabel, JumpLabelsMap};
 use crate::token::Token;
 
 const MACRO_START: &str = "#define macro";
@@ -50,7 +49,6 @@ fn parse_function(contents: &str, skip: usize) -> Option<Function> {
         // end of function
         if trimmed_line.starts_with(MACRO_END) {
             function.end = line_number + skip;
-            in_function = false;
             return Some(function);
         }
 
@@ -95,7 +93,7 @@ fn parse_function_args(line: &str) -> (i32, i32) {
 }
 
 pub fn parse(path: &str) -> Vec<Function> {
-    let mut file = File::open(path).expect(&format!("Unable to open file: {}", path));
+    let mut file = File::open(path).unwrap_or_else(|_| panic!("Unable to open file: {}", path));
     let mut contents = String::new();
     file.read_to_string(&mut contents)
         .expect("Error reading file");
