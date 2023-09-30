@@ -8,10 +8,7 @@ pub struct JumpLabel {
 
 impl JumpLabel {
     pub fn new(name: String, start: usize) -> JumpLabel {
-        JumpLabel {
-            name: name,
-            start: 0,
-        }
+        JumpLabel { name, start: 0 }
     }
 }
 

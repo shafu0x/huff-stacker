@@ -130,6 +130,6 @@ impl FunctionsMap {
     pub fn get(&self, name: &str) -> &Function {
         self.map
             .get(name)
-            .expect(&format!("ERROR: Function {} not found", name))
+            .unwrap_or_else(|| panic!("ERROR: Function {} not found", name))
     }
 }

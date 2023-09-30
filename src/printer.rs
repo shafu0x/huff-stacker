@@ -14,10 +14,10 @@ fn create_comments(function: &Function, stack_order: &str) -> String {
         let final_len = function.longest_line() - line.len() + 1;
         final_text.push_str(line);
         for _ in 0..final_len {
-            final_text.push_str(" ");
+            final_text.push(' ');
         }
         final_text.push_str(" // ");
-        final_text.push_str("[");
+        final_text.push('[');
         let mut values = function.stack_history.stacks[i]
             .values
             .iter()
@@ -28,9 +28,10 @@ fn create_comments(function: &Function, stack_order: &str) -> String {
             values.reverse();
         }
 
-        final_text.push_str(&values.join(", ").as_str());
-        final_text.push_str("]");
-        final_text.push_str("\n");
+        // final_text.push_str(values.join(", ").as_str());
+        final_text.push_str(values.join(", ").as_str());
+        final_text.push(']');
+        final_text.push('\n');
     }
     final_text
 }
@@ -40,11 +41,10 @@ fn is_comment_or_empty(line: &str) -> bool {
 }
 
 // merge the comments with the original file contents
-fn merge(function: &Function, content_lines: &mut Vec<String>, comments: String) -> Vec<String> {
+fn merge(function: &Function, content_lines: &mut [String], comments: String) -> Vec<String> {
     let comment_lines: Vec<String> = comments.lines().map(|l| l.to_string()).collect();
 
-    let mut i = 0;
-    for index in function.start + 1..=function.start + comment_lines.len() {
+    for (i, index) in (function.start + 1..=function.start + comment_lines.len()).enumerate() {
         let content_line = content_lines.get_mut(index);
 
         if let Some(content_line) = content_line {
@@ -57,7 +57,6 @@ fn merge(function: &Function, content_lines: &mut Vec<String>, comments: String)
                 }
             }
         }
-        i += 1;
     }
 
     content_lines.to_vec()
@@ -77,7 +76,7 @@ pub fn write(path_in: &str, path_out: &str, functions: &Vec<Function>, stack_ord
     let mut final_text = String::new();
     for line in content_lines {
         final_text.push_str(line.as_str());
-        final_text.push_str("\n");
+        final_text.push('\n');
     }
 
     let mut file = File::create(path_out).expect("Error creating file");
