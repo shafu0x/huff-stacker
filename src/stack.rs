@@ -49,7 +49,31 @@ impl Stack {
         }
 
         if opcode.pushes == 1 {
-            self.push(token);
+            self.push(token.clone()); // Clone the token before pushing
+        }
+
+        if opcode.dupe > 0 {
+            self.dup(opcode.dupe);
+        }
+
+        if opcode.swap > 0 {
+            self.swap(opcode.dupe);
+        }
+    }
+
+    pub fn dup(&mut self, index: usize) {
+        let token = self.values.get(index).unwrap().clone();
+        self.values.push(token);
+    }
+
+    // after multiple tries, this is what ChatGPT helped me come up with
+    pub fn swap(&mut self, index: usize) {
+        if index < self.values.len() {
+            let (first, rest) = self.values.split_at_mut(1);
+            let second = &mut rest[index - 1];
+            std::mem::swap(&mut first[0], second);
+        } else {
+            // Handle out of bounds
         }
     }
 
