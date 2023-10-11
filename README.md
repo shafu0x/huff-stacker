@@ -53,14 +53,24 @@ To this:
 ## How to use
 
 ```console
-$ cargo run <INPUT_FILE> <OUTPUT_FILE> 
+$ cargo run <INPUT_FILE> <OUTPUT_FILE>
 ```
 
 Optional
 
+Stack direction (default is left):
+
 ```console
 stack-direction: [--(right/left)]
 ```
+
+Use stack output (default is false):
+
+```console
+show-stack-output: [--stack-output]
+```
+
+Note: this setting will add stack outputs to the stack where possible. For example, instead of adding `call(param1, param2, ..., param7)` it will add `success` to the stack comments.
 
 #### Example
 
